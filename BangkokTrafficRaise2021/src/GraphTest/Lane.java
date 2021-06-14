@@ -19,7 +19,7 @@ public class Lane<Vehicle>{
     	this.head = null;
     }
 	
-    public push
+    //public push
     
 }
 

@@ -1,12 +1,15 @@
 package FirstFlowModel;
 
-import TrafficGraph.DirectedEdge;
-
 public class Road {
 
+	private static final int carLength = 5;
+	
 	private final int from;
 	private final int to;
-	private final double length;
+	private final double length; //length of road in meters
+	
+	private Car[] cars;
+	
 	//private final int numLanes;
 
 	    /**
@@ -26,6 +29,9 @@ public class Road {
 		this.from = from;
 		this.to = to;
 		this.length = length;
+		
+		int maxNumCars = (int) (length/(carLength + 1));
+		this.cars = new Car[maxNumCars];
 	    }
 
     /**
@@ -45,13 +51,60 @@ public class Road {
 	}
 
 	/**
-     * Returns the weight of the directed edge.
-     * @return the weight of the directed edge
+     * Returns the length of the road.
+     * @return the length of the road
      */
     public double length() {
         return length;
     }
+    
+    /**
+     * Returns car slots on the road.
+     * @return array of car slots
+     */
+    public Car[] cars() {
+    	return cars;
+    }
 
+    /**
+     * Set car array
+     * @param index which index of cars car[] to set
+     * @param car car to put at that index
+     */
+    public void setCar(int index, Car car) {
+    	if(index < 0 || index >= cars.length) {
+    		throw new IllegalArgumentException("Road is too short.");
+    	} else {
+    		cars[index] = car;
+    	}
+    }
+    
+    public String printRoad() {
+    	String toReturn = from + "";
+
+    	for(int i = 0; i < cars.length; i++) {
+    		if(cars[i] == null) {
+    			toReturn += "-";
+    		} else {
+    			toReturn += "x";;
+    		}
+    	}
+    	
+    	toReturn += to;
+    	
+    	return toReturn;
+    }
+    
+//    public void iterate1() {
+//    	
+//    	
+//    	for(int i = 0; i < cars.length; i++) {
+//    		if(i == 0 && cars[i] != null && cars[i].moving) {
+//    			
+//    		}
+//    	}
+//    }
+    
     /**
      * Returns a string representation of the directed edge.
      * @return a string representation of the directed edge
@@ -60,15 +113,15 @@ public class Road {
         return from + "->" + to + " " + String.format("%5.5f", length);
     }
 
-    
-    
     /**
      * Unit tests the {@code DirectedEdge} data type.
      *
      * @param args the command-line arguments
      */
     public static void main(String[] args) {
-        DirectedEdge e = new DirectedEdge(12, 34, 5.67);
-        System.out.println(e);
+        Road r = new Road(0, 1, 600);
+        System.out.println(r);
+        r.cars[3] = new Car();
+        System.out.println(r.printRoad());
     }
 }
