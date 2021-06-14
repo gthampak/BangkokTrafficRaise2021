@@ -9,7 +9,7 @@ public class RoadNetwork {
 
     private int V; // number of vertices in this digraph
     private int R; // number of roads in this digraph
-    private Road[][] roads; // roads matrix
+    private Bag<Road>[] roads; // roads matrix
     private int[] indegree; // indegree[v] = indegree of vertex v
     
     /**
@@ -22,7 +22,12 @@ public class RoadNetwork {
     	if (V < 0) throw new IllegalArgumentException("Number of vertices in a Digraph must be nonnegative");
     	this.V = V;
     	this.R = 0;
-    	this.roads = new Road[V][V];
+    	
+    	this.roads = (Bag<Road>[]) new Bag[V];
+    	for (int v = 0; v < V; v++) {
+            roads[v] = new Bag<Road>();
+    	}
+    	
     	this.indegree = new int[V];
     }
     
@@ -63,13 +68,9 @@ public class RoadNetwork {
         validateVertex(v);
         validateVertex(w);
         
-        if(roads[v][w] != null) {
-        	roads[v][w] = r;
-        	indegree[w]++;
-            R++;
-        } else {
-        	throw new IllegalArgumentException("Road between two vertices already exist");
-        }     
+        roads[v].add(r);
+        indegree[w]++;
+        R++;  
     }
     
     /**
@@ -84,7 +85,7 @@ public class RoadNetwork {
     public void addRoad(int from, int to, double length) {
         validateVertex(from);
         validateVertex(to);
-        roads[from][to] = new Road(from, to, length);
+        roads[from].add(new Road(from, to, length));
         indegree[to]++;
         R++;
     }
@@ -96,7 +97,7 @@ public class RoadNetwork {
      * @return the directed edges incident from vertex {@code v} as an Iterable
      * @throws IllegalArgumentException unless {@code 0 <= v < V}
      */
-    public Road[] adj(int from) {
+    public Iterable<Road> roadsFrom(int from) {
         validateVertex(from);
         return roads[from];
     }
@@ -111,16 +112,7 @@ public class RoadNetwork {
      */
     public int outdegree(int from) {
         validateVertex(from);
-
-        int outdegree = 0;
-        for(int i = 0; i < V; i++) {
-        	if(roads[from][i] != null) {
-        		outdegree++;
-        	}
-        }
-        
-        return outdegree;
-        
+        return roads[from].size();
     }
     
     /**
@@ -137,21 +129,22 @@ public class RoadNetwork {
     }
     
     /**
-     * Returns all directed edges in this edge-weighted digraph.
+     * Returns all roads in this edge-weighted digraph.
      * To iterate over the edges in this edge-weighted digraph, use foreach notation:
      * {@code for (DirectedEdge e : G.edges())}.
      *
      * @return all edges in this edge-weighted digraph, as an iterable
      */
-    public Iterable<DirectedEdge> edges() {
-        Bag<DirectedEdge> list = new Bag<DirectedEdge>();
+    public Iterable<Road> allRoads() {
+        Bag<Road> list = new Bag<Road>();
         for (int v = 0; v < V; v++) {
-            for (DirectedEdge e : adj(v)) {
-                list.add(e);
+            for (Road r : roadsFrom(v)) {
+                list.add(r);
             }
         }
         return list;
     } 
+    
     
     
 }
