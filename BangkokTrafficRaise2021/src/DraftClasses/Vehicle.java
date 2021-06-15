@@ -1,4 +1,4 @@
-package GraphTest;
+package DraftClasses;
 
 public class Vehicle {
 
