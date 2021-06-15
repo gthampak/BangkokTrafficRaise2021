@@ -10,6 +10,7 @@ public class RoadNetwork {
     private int R; // number of roads in this digraph
     private ArrayList<Road>[] roads; // roads matrix
     private int[] indegree; // indegree[v] = indegree of vertex v
+    private int iterations;
     
     /**
      * Initializes a road network with {@code V} vertices and 0 edges.
@@ -28,6 +29,7 @@ public class RoadNetwork {
     	}
     	
     	this.indegree = new int[V];
+    	this.iterations = 0;
     }
     
     /**
@@ -172,6 +174,11 @@ public class RoadNetwork {
         return s.toString();
     }
     
+    /**
+     * toString method: prints out Road Network by showing adjacency list and road representations
+     *
+     * @return String to print
+     */
     public String toString() {
     	String toReturn = "";
     	
@@ -187,24 +194,27 @@ public class RoadNetwork {
     	return toReturn;
     }
     
-    public void iterate1() {
+    public void iterate() {
     	
     	for (int v = 0; v < V; v++) { //for all intersections
             for (Road r : roadsFrom(v)) { //for all roads starting from intersection
             	for(int i = r.cars().length - 1; i >= 0; i--) { //for all car slots on the road
                 	
-            		if(r.cars()[i] != null && !r.cars()[i].iterated()) { //car and not iterated
+            		if(r.cars()[i] != null && iterations == r.cars()[i].iterations()) { //car and same network-car iterations
             				
             			if(i == r.cars().length - 1) { //if car is at the end of the road
                     		
             				//car + car is moving
             				if(r.cars()[i] != null && r.cars()[i].moving() && outdegree(r.to()) != 0) {
-                    				
-                    			r.cars()[i].setIterated(true);
                     			
                    				double decideHelp = 1.0/(outdegree(r.to()));
                        			int toRoad = (int) (Math.random() / decideHelp);
-                       			roadsFrom(r.to()).get(toRoad).setCar(0, r.cars()[i]);
+                       			
+                       			Road roadTo = roadsFrom(r.to()).get(toRoad);
+                       			
+                       			r.cars()[i].iterate();
+                       			
+                       			roadTo.setCar(0, r.cars()[i]);
                        			r.setCar(i, null);
                        			
                    			}
@@ -214,6 +224,8 @@ public class RoadNetwork {
             			else { //car not at the end of the road
                     			
                    			if(r.cars()[i].moving() && r.cars()[i+1] == null) {
+                   				r.cars()[i].iterate();
+                   				
                    				r.setCar(i+1, r.cars()[i]);
                        			r.setCar(i, null);
                    			}
@@ -221,17 +233,16 @@ public class RoadNetwork {
             				
            			} //end of car and not iterated
             		
-            		else if(r.cars()[i] != null && r.cars()[i].iterated()) { //car and iterated
-           				r.cars()[i].setIterated(false);
-           			} //end of car and iterated
-            		
             		// no car => do nothing
             		// car in front => do nothing
             		// car not moving => do nothing
+            		// car-network iterations don't match
             			
                	} //for loop close
             } //for loop close
         } //for loop close
+    	
+    	iterations++;
     	
     }
     

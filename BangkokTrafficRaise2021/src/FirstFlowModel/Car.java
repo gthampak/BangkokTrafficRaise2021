@@ -4,10 +4,12 @@ public class Car {
 
 	private boolean moving;
 	private boolean iterated;
+	private int interations;
 	
 	public Car() {
 		moving = true;
 		iterated = false;
+		interations = 0;
 	}
 	
 	public boolean moving() {
@@ -20,6 +22,14 @@ public class Car {
 	
 	public void setIterated(boolean iterated) {
 		this.iterated = iterated;
+	}
+	
+	public int iterations() {
+		return interations;
+	}
+	
+	public void iterate() {
+		interations++;
 	}
 	
 }
