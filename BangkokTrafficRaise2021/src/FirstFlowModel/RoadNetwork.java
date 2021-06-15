@@ -252,28 +252,9 @@ public class RoadNetwork {
      * @param args the command-line arguments
      */
     public static void main(String[] args) {
-        RoadNetwork RN = new RoadNetwork(10);
-        RN.addRoad(new Road(0, 1, 1.5));
-        RN.addRoad(new Road(3, 4, 2.5));
-        RN.addRoad(new Road(1, 5, 5));
-        RN.addRoad(5, 1, 10);
-        RN.addRoad(0, 9, 1.5);
-        RN.roadsList();
+
+    	//moved Unit tests to main class
     	
-    	RoadNetwork RN1 = new RoadNetwork(2);
-    	RN1.addRoad(0, 1, 60);
-    	RN1.roads[0].get(0).setCar(0, new Car());
-    	System.out.println(RN1.roadsList());
-    	
-    	System.out.println("");
-    	
-    	System.out.println(RN1);
-    	RN1.iterate1();
-    	System.out.println(RN1);
-    	RN1.roads[0].get(0).setCar(2, new Car());
-    	System.out.println(RN1);
-    	RN1.iterate1();
-    	System.out.println(RN1);
     }
     
 }
