@@ -1,0 +1,6 @@
+FirstFlowModel + attempts to:
+
+	1. Add Traffic Lights
+	2. Add Lanes
+	3. Additional User Interactions (control cars and traffic lights at each iteration)
+
