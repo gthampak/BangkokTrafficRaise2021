@@ -40,12 +40,21 @@ public class RoadNetwork {
     }
 
     /**
-     * Returns the number of edges in this edge-weighted digraph.
+     * Returns the number of roads in the road network.
      *
-     * @return the number of edges in this edge-weighted digraph
+     * @return the number of roads in the road network
      */
     public int R() {
         return R;
+    }
+    
+    /**
+     * Returns ArrayList of Roads in Road Network
+     *
+     * @return the ArrayList of Roads in Road Network
+     */
+    public ArrayList<Road>[] roads() {
+        return roads;
     }
     
     // throw an IllegalArgumentException unless {@code 0 <= v < V}
@@ -179,46 +188,66 @@ public class RoadNetwork {
     }
     
     public void iterate1() {
+    	
     	for (int v = 0; v < V; v++) { //for all intersections
             for (Road r : roadsFrom(v)) { //for all roads starting from intersection
-            	
             	for(int i = r.cars().length - 1; i >= 0; i--) { //for all car slots on the road
-            		if(i == r.cars().length - 1) { //if car is at the end of the road
+                	
+            		if(r.cars()[i] != null && !r.cars()[i].iterated()) { //car and not iterated
+            				
+            			if(i == r.cars().length - 1) { //if car is at the end of the road
+                    		
+            				//car + car is moving
+            				if(r.cars()[i] != null && r.cars()[i].moving() && outdegree(r.to()) != 0) {
+                    				
+                    			r.cars()[i].setIterated(true);
+                    			
+                   				double decideHelp = 1.0/(outdegree(r.to()));
+                       			int toRoad = (int) (Math.random() / decideHelp);
+                       			roadsFrom(r.to()).get(toRoad).setCar(0, r.cars()[i]);
+                       			r.setCar(i, null);
+                       			
+                   			}
+                   			
+                   		} // end of car is at the end of the road
             			
-            			if(r.cars()[i] != null && r.cars()[i].moving && outdegree(r.to()) != 0) {
-            				double decideHelp = 1.0/(outdegree(r.to()));
-                			int toRoad = (int) (Math.random() / decideHelp);
-                			int toRoadLength = roadsFrom(i).get(toRoad).cars().length;
-                			roadsFrom(i).get(toRoad).setCar(toRoadLength - 1, r.cars()[i]);
-                			r.setCar(i, null);
-            			}
-            			
-            		} else { //car not at the end of the road
-            			
-            			if(r.cars()[i] != null && r.cars()[i].moving && r.cars()[i+1] == null) {
-            				r.setCar(i+1, r.cars()[i]);
-                			r.setCar(i, null);
-            			}
-            		}
+            			else { //car not at the end of the road
+                    			
+                   			if(r.cars()[i].moving() && r.cars()[i+1] == null) {
+                   				r.setCar(i+1, r.cars()[i]);
+                       			r.setCar(i, null);
+                   			}
+                   		}
+            				
+           			} //end of car and not iterated
             		
-            	}
-            }
-        }
+            		else if(r.cars()[i] != null && r.cars()[i].iterated()) { //car and iterated
+           				r.cars()[i].setIterated(false);
+           			} //end of car and iterated
+            		
+            		// no car => do nothing
+            		// car in front => do nothing
+            		// car not moving => do nothing
+            			
+               	} //for loop close
+            } //for loop close
+        } //for loop close
+    	
     }
     
     /**
-     * Unit tests the {@code EdgeWeightedDigraph} data type.
+     * Unit tests the {@code RoadNetwork} data type.
      *
      * @param args the command-line arguments
      */
     public static void main(String[] args) {
-//        RoadNetwork RN = new RoadNetwork(10);
-//        RN.addRoad(new Road(0, 1, 1.5));
-//        RN.addRoad(new Road(3, 4, 2.5));
-//        RN.addRoad(new Road(1, 5, 5));
-//        RN.addRoad(5, 1, 10);
-//        RN.addRoad(0, 9, 1.5);
-//        RN.printRoadsList();
+        RoadNetwork RN = new RoadNetwork(10);
+        RN.addRoad(new Road(0, 1, 1.5));
+        RN.addRoad(new Road(3, 4, 2.5));
+        RN.addRoad(new Road(1, 5, 5));
+        RN.addRoad(5, 1, 10);
+        RN.addRoad(0, 9, 1.5);
+        RN.roadsList();
     	
     	RoadNetwork RN1 = new RoadNetwork(2);
     	RN1.addRoad(0, 1, 60);
