@@ -25,6 +25,8 @@ public class Car {
 		
 		this.speed = testSpeed; 
 		this.acceleration = testAcceleration;
+		
+		this.length = testLength;
 	}
 	
 	public Car(double tailPos) {
@@ -35,6 +37,8 @@ public class Car {
 		
 		this.speed = testSpeed; 
 		this.acceleration = testAcceleration;
+		
+		this.length = testLength;
 	}
 	
 	public int iterations() {

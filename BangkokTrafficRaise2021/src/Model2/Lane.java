@@ -32,6 +32,7 @@ public class Lane {
 		this.length = length;
 		
 		this.laneNumber = laneNumber;
+		this.trafficLight = 'R';
 		
 		this.cars = new ArrayList<>();
 		this.toLanes = new ArrayList<>();
@@ -77,12 +78,20 @@ public class Lane {
     	return trafficLight;
     }
 
+    public void setTrafficLight(char tl) {
+    	this.trafficLight = tl;
+    }
+    
     /**
      * Returns possible next lanes
      * @return toLane ArrayList
      */
     public ArrayList<Lane> toLanes() {
     	return toLanes;
+    }
+    
+    public void addToLanes(Lane l) {
+    	toLanes.add(l);
     }
     
     /**
@@ -128,6 +137,16 @@ public class Lane {
     public String printLane() {
     	String toReturn = from + "";
     	
+    	if(cars.size() != 0) { //print empty lane leading up to last car
+    		for(int i = 0; i < cars.get(cars.size() - 1).tailPos()/10; i ++) {
+    			toReturn += "-";
+    		}
+    	} else { //no cars in lane
+    		for(int i = 0; i < length/10; i ++) {
+    			toReturn += "-";
+    		}
+    	}
+    	
     	for(int i = 0; i < cars.size(); i++) {
     		
     		if(i != cars.size()-1) {
@@ -136,7 +155,7 @@ public class Lane {
         		
         		toReturn += "x";
         		
-        		for(int j = 0; j < interval; j++) {
+        		for(int j = 0; j < interval - 1; j++) {
         			toReturn += "-";
         		}
         		
@@ -146,14 +165,17 @@ public class Lane {
         		
         		toReturn += "x";
         		
-        		for(int j = 0; j < interval; j++) {
+        		for(int j = 0; j < interval - 1; j++) {
         			toReturn += "-";
         		}
     		}
     		
     	}
     	
+    	
     	toReturn += to;
+    	toReturn += trafficLight;
+    	
     	
     	//add toLanes ArrayList
     	

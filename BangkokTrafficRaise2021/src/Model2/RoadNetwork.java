@@ -187,36 +187,52 @@ public class RoadNetwork {
     	for (int v = 0; v < V; v++) { //for all intersections
             for (Road r : roadsFrom(v)) { //for all roads starting from intersection
             	for(Lane l : r.lanes()) {
+            		
+            		boolean removedCar = false;
+            		
             		for(Car c : l.cars()) { //for all car slots on the road
                     	
-            			double headPos = c.headPos() + c.speed();
-            			double tailPos = c.tailPos() + c.speed();
-            			
-            			if(headPos > l.length() && l.trafficLight() == 'R') {
-            				headPos = l.length();
-            				tailPos = l.length() - c.length();
-            			} else if(headPos > l.length() && l.trafficLight() == 'G') {
+            			if(c.iterations() == iterations) { //avoid doing same car twice in one iteration
             				
-            				//go to new road/lane
-            				double decideHelp = 1.0/(l.toLanes().size());
-            		   		int toLane = (int) (Math.random() / decideHelp);
-            				
-            		   		headPos = c.speed() - (l.length() - c.headPos());
-            		   		tailPos = l.length() - c.length();
-            		   		
-            		   		if(l.toLanes().get(toLane).insertCar(c)) {
-            		   			l.cars().remove(0);
-            		   		} else {
-            		   			headPos = l.length();
-                				tailPos = l.length() - c.length();
-            		   		}
-            		   		
-            			} else {
-            				//headPos = c.headPos() + c.speed();
-                			//tailPos = c.tailPos() + c.speed();
+            				double headPos = c.headPos() + c.speed();
+                			
+                			if(headPos > l.length() && l.trafficLight() == 'R') {
+                				headPos = l.length();
+                			} else if(headPos > l.length() && l.trafficLight() == 'G') {
+                				
+                				//go to new road/lane
+                				double decideHelp = 1.0/(l.toLanes().size());
+                		   		int toLane = (int) (Math.random() / decideHelp);
+                				
+                		   		headPos = c.speed() - (l.length() - c.headPos());
+                		   		
+                		   		if(l.toLanes().get(toLane).insertCar(c)) {
+                		   			removedCar = true;
+                		   		} else {
+                		   			headPos = l.length();
+                		   		}
+                		   		
+                			} else {
+                				//headPos = c.headPos() + c.speed();
+                			}
+                			
+                			c.setHeadPos(headPos);
+                			c.setTailPos(c.headPos() - c.length());
+                			
+                			c.iterate();
+                			
+                			System.out.println("car headPos is " + c.headPos());
+                			System.out.println("car tailPos is " + c.tailPos());
+                			
             			}
-            	
+            			
             		}//for loop close
+            		
+            		if(removedCar) {
+            			l.cars().remove(0);
+            			removedCar = false;
+            		}
+            		
                	} //for loop close
             } //for loop close
         } //for loop close
