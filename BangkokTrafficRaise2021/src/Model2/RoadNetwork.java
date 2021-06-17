@@ -236,7 +236,32 @@ public class RoadNetwork {
      */
     public static void main(String[] args) {
 
-    	//moved Unit tests to main class
+    	//simple RoadNetwork class test
+    	
+    	RoadNetwork RN = new RoadNetwork(3);
+    	
+    	Road r = new Road(0, 1, 100, 4);
+    	
+    	Road r1 = new Road(0, 1, 500, 4);
+    	Road r2 = new Road(1, 2, 300, 2);
+    	
+    	for(Lane l : r1.lanes()) {
+			l.insertCar(new Car());
+			l.insertCar(new Car(Math.random()*500));
+			l.insertCar(new Car(Math.random()*500));
+			l.insertCar(new Car(Math.random()*500));
+		}
+    	
+    	for(Lane l : r2.lanes()) {
+			l.insertCar(new Car());
+			l.insertCar(new Car(Math.random()*300));
+			l.insertCar(new Car(Math.random()*300));
+		}
+    	
+    	RN.addRoad(r1);
+    	RN.addRoad(r2);
+    	
+    	System.out.println(RN);
     	
     }
     

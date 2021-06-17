@@ -7,13 +7,12 @@ public class Lane {
 	private final int from;
 	private final int to;
 	private final double length; //length of lane in meters
-	
 	private int laneNumber;
 	
-	private char trafficLight;
-	
-	private ArrayList<Lane> lanesTo;
 	private ArrayList<Car> cars;
+	
+	private char trafficLight;
+	private ArrayList<Lane> toLanes; //possible next lanes at intersection
 	
 	//private final int numLanes;
 
@@ -35,6 +34,7 @@ public class Lane {
 		this.laneNumber = laneNumber;
 		
 		this.cars = new ArrayList<>();
+		this.toLanes = new ArrayList<>();
 	    }
 
     /**
@@ -98,7 +98,12 @@ public class Lane {
     		
     	}
     	
-    	cars.add(insertIndex, car);
+    	if(insertIndex != -1) {
+    		cars.add(insertIndex, car);
+    	} else {
+    		System.out.println("Car not inserted in lane " + laneNumber + " of road from " + from + " to " + to);
+    	}
+    	
     	
     }
     
@@ -109,7 +114,7 @@ public class Lane {
     		
     		if(i != cars.size()-1) {
     			double carDist = cars.get(i+1).tailPos() - cars.get(i).tailPos();
-        		int interval = (int) carDist/10;
+        		int interval = (int) carDist/10 - 1;
         		
         		toReturn += "x";
         		
@@ -132,6 +137,8 @@ public class Lane {
     	
     	toReturn += to;
     	
+    	//add toLanes ArrayList
+    	
     	return toReturn;
     }
     
@@ -149,6 +156,8 @@ public class Lane {
      * @param args the command-line arguments
      */
     public static void main(String[] args) {
+    	//simple Lane class test
+    	
     	Lane testLane = new Lane(0, 1, 100, 0);
     	testLane.insertCar(new Car());
     	testLane.insertCar(new Car(50.0));
