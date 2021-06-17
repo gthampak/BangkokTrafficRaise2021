@@ -49,12 +49,24 @@ public class Car {
 		return headPos;
 	}
 	
+	public void setHeadPos(double headPos) {
+		this.headPos = headPos;
+	}
+	
 	public double tailPos() {
 		return tailPos;
 	}
 	
+	public void setTailPos(double tailPos) {
+		this.tailPos = tailPos;
+	}
+	
 	public double speed() {
 		return speed;
+	}
+	
+	public double length() {
+		return length;
 	}
 	
 }

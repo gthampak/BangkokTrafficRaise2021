@@ -177,50 +177,46 @@ public class RoadNetwork {
     	return toReturn;
     }
     
+    
+    /* Random number from 0 to outdegree
+	 * 	double decideHelp = 1.0/(outdegree(r.to()));
+   		int toRoad = (int) (Math.random() / decideHelp);
+	 */
     public void iterate() {
     	
     	for (int v = 0; v < V; v++) { //for all intersections
-            for (Lane r : roadsFrom(v)) { //for all roads starting from intersection
-            	for(int i = r.cars().length - 1; i >= 0; i--) { //for all car slots on the road
-                	
-            		if(r.cars()[i] != null && iterations == r.cars()[i].iterations()) { //car and same network-car iterations
-            				
-            			if(i == r.cars().length - 1) { //if car is at the end of the road
-                    		
-            				//car + car is moving
-            				if(r.cars()[i] != null && r.cars()[i].moving() && outdegree(r.to()) != 0) {
-                    			
-                   				double decideHelp = 1.0/(outdegree(r.to()));
-                       			int toRoad = (int) (Math.random() / decideHelp);
-                       			
-                       			Lane roadTo = roadsFrom(r.to()).get(toRoad);
-                       			
-                       			r.cars()[i].iterate();
-                       			
-                       			roadTo.setCar(0, r.cars()[i]);
-                       			r.setCar(i, null);
-                       			
-                   			}
-                   			
-                   		} // end of car is at the end of the road
+            for (Road r : roadsFrom(v)) { //for all roads starting from intersection
+            	for(Lane l : r.lanes()) {
+            		for(Car c : l.cars()) { //for all car slots on the road
+                    	
+            			double headPos = c.headPos() + c.speed();
+            			double tailPos = c.tailPos() + c.speed();
             			
-            			else { //car not at the end of the road
-                    			
-                   			if(r.cars()[i].moving() && r.cars()[i+1] == null) {
-                   				r.cars()[i].iterate();
-                   				
-                   				r.setCar(i+1, r.cars()[i]);
-                       			r.setCar(i, null);
-                   			}
-                   		}
+            			if(headPos > l.length() && l.trafficLight() == 'R') {
+            				headPos = l.length();
+            				tailPos = l.length() - c.length();
+            			} else if(headPos > l.length() && l.trafficLight() == 'G') {
             				
-           			} //end of car and not iterated
-            		
-            		// no car => do nothing
-            		// car in front => do nothing
-            		// car not moving => do nothing
-            		// car-network iterations don't match
-            			
+            				//go to new road/lane
+            				double decideHelp = 1.0/(l.toLanes().size());
+            		   		int toLane = (int) (Math.random() / decideHelp);
+            				
+            		   		headPos = c.speed() - (l.length() - c.headPos());
+            		   		tailPos = l.length() - c.length();
+            		   		
+            		   		if(l.toLanes().get(toLane).insertCar(c)) {
+            		   			l.cars().remove(0);
+            		   		} else {
+            		   			headPos = l.length();
+                				tailPos = l.length() - c.length();
+            		   		}
+            		   		
+            			} else {
+            				//headPos = c.headPos() + c.speed();
+                			//tailPos = c.tailPos() + c.speed();
+            			}
+            	
+            		}//for loop close
                	} //for loop close
             } //for loop close
         } //for loop close

@@ -68,13 +68,29 @@ public class Lane {
     public ArrayList<Car> cars() {
     	return cars;
     }
+    
+    /**
+     * Returns Traffic light of lane.
+     * @return Traffic light char of lane
+     */
+    public char trafficLight() {
+    	return trafficLight;
+    }
 
+    /**
+     * Returns possible next lanes
+     * @return toLane ArrayList
+     */
+    public ArrayList<Lane> toLanes() {
+    	return toLanes;
+    }
+    
     /**
      * Set car array
      * @param index which index of cars car[] to set
      * @param car car to put at that index
      */
-    public void insertCar(Car car) {
+    public boolean insertCar(Car car) {
     	
     	double headPos = car.headPos();
     	double tailPos = car.tailPos();
@@ -100,8 +116,10 @@ public class Lane {
     	
     	if(insertIndex != -1) {
     		cars.add(insertIndex, car);
+    		return true;
     	} else {
     		System.out.println("Car not inserted in lane " + laneNumber + " of road from " + from + " to " + to);
+    		return false;
     	}
     	
     	
