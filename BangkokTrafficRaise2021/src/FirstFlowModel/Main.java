@@ -112,7 +112,22 @@ public class Main {
 		RN.addRoad(2, 1, 60);
 		RN.addRoad(3, 2, 60);
 		RN.addRoad(0, 3, 60);
-		RN.roads()[0].get(0).setCar(8, new Car());
+		RN.roads()[0].get(0).setCar(0, new Car());
+		RN.roads()[0].get(1).setCar(0, new Car());
+		RN.roads()[1].get(0).setCar(0, new Car());
+		RN.roads()[1].get(1).setCar(0, new Car());
+		RN.roads()[2].get(0).setCar(0, new Car());
+		RN.roads()[2].get(1).setCar(0, new Car());
+		RN.roads()[3].get(0).setCar(0, new Car());
+		RN.roads()[3].get(1).setCar(0, new Car());
+		RN.roads()[0].get(0).setCar(3, new Car());
+		RN.roads()[0].get(1).setCar(6, new Car());
+		RN.roads()[1].get(0).setCar(7, new Car());
+		RN.roads()[1].get(1).setCar(9, new Car());
+		RN.roads()[2].get(0).setCar(3, new Car());
+		RN.roads()[2].get(1).setCar(5, new Car());
+		RN.roads()[3].get(0).setCar(2, new Car());
+		RN.roads()[3].get(1).setCar(2, new Car());
 		System.out.println(RN);
 		
 		userInteract1(RN);

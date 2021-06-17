@@ -2,34 +2,59 @@ package Model2;
 
 public class Car {
 
-	private boolean moving;
-	private boolean iterated;
-	private int interations;
+	//test variables
+	private static final double testSpeed = 10.0;
+	private static final double testAcceleration = 0.0;
+	private static final double testLength = 5.0;
+	
+	private int iterations; //keeps track of road network iterations
+	private double length; //car length (in meters)
+	
+	private double headPos; //position of car head on road/lane
+	private double tailPos; //position of car tail on road/lane
+	
+	private double speed; //speed in meters per second/iteration
+	private double acceleration;
+	
 	
 	public Car() {
-		moving = true;
-		iterated = false;
-		interations = 0;
+		this.iterations = 0;
+		
+		this.tailPos = 0.0;
+		this.headPos = tailPos + testLength;
+		
+		this.speed = testSpeed; 
+		this.acceleration = testAcceleration;
 	}
 	
-	public boolean moving() {
-		return moving;
-	}
-	
-	public boolean iterated() {
-		return iterated;
-	}
-	
-	public void setIterated(boolean iterated) {
-		this.iterated = iterated;
+	public Car(double tailPos) {
+		this.iterations = 0;
+		
+		this.tailPos = tailPos;
+		this.headPos = tailPos + testLength;
+		
+		this.speed = testSpeed; 
+		this.acceleration = testAcceleration;
 	}
 	
 	public int iterations() {
-		return interations;
+		return iterations;
 	}
 	
 	public void iterate() {
-		interations++;
+		iterations++;
+	}
+	
+	public double headPos() {
+		return headPos;
+	}
+	
+	public double tailPos() {
+		return tailPos;
+	}
+	
+	public double speed() {
+		return speed;
 	}
 	
 }

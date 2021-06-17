@@ -29,7 +29,7 @@ public class Main {
 	public void simpleTest1() {
 		RoadNetwork RN = new RoadNetwork(2);
     	RN.addRoad(0, 1, 60);
-    	RN.roads()[0].get(0).setCar(0, new Car());
+    	RN.roads()[0].get(0).insertCar(new Car());
     	System.out.println(RN);
 	}
 	
@@ -40,7 +40,7 @@ public class Main {
 		RoadNetwork RN = new RoadNetwork(2);
     	RN.addRoad(0, 1, 18);
     	RN.addRoad(1, 0, 18);
-    	RN.roads()[0].get(0).setCar(0, new Car());
+    	RN.roads()[0].get(0).insertCar(new Car());
     	System.out.println(RN);
     	
     	userInteract1(RN);
@@ -84,7 +84,7 @@ public class Main {
 		RN.addRoad(1, 2, 60);
 		RN.addRoad(2, 3, 60);
 		RN.addRoad(3, 0, 60);
-		RN.roads()[0].get(0).setCar(0, new Car());
+		RN.roads()[0].get(0).insertCar(new Car());
 		System.out.println(RN);
 		
 		userInteract1(RN);
@@ -96,7 +96,7 @@ public class Main {
 		RN.addRoad(1, 2, 60);
 		RN.addRoad(2, 3, 60);
 		RN.addRoad(3, 0, 60);
-		RN.roads()[0].get(0).setCar(0, new Car());
+		RN.roads()[0].get(0).insertCar(new Car());
 		System.out.println(RN);
 		
 		userInteract1(RN);
@@ -112,7 +112,7 @@ public class Main {
 		RN.addRoad(2, 1, 60);
 		RN.addRoad(3, 2, 60);
 		RN.addRoad(0, 3, 60);
-		RN.roads()[0].get(0).setCar(8, new Car());
+		RN.roads()[0].get(0).insertCar(new Car());
 		System.out.println(RN);
 		
 		userInteract1(RN);

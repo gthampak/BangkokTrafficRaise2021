@@ -8,7 +8,7 @@ public class RoadNetwork {
 	
     private int V; // number of vertices in this digraph
     private int R; // number of roads in this digraph
-    private ArrayList<Lane>[] roads; // roads matrix
+    private ArrayList<Road>[] roads; // roads matrix
     private int[] indegree; // indegree[v] = indegree of vertex v
     private int iterations;
     
@@ -23,9 +23,9 @@ public class RoadNetwork {
     	this.V = V;
     	this.R = 0;
     	
-    	this.roads = (ArrayList<Lane>[]) new ArrayList[V];
+    	this.roads = (ArrayList<Road>[]) new ArrayList[V];
     	for (int v = 0; v < V; v++) {
-            roads[v] = new ArrayList<Lane>();
+            roads[v] = new ArrayList<Road>();
     	}
     	
     	this.indegree = new int[V];
@@ -55,7 +55,7 @@ public class RoadNetwork {
      *
      * @return the ArrayList of Roads in Road Network
      */
-    public ArrayList<Lane>[] roads() {
+    public ArrayList<Road>[] roads() {
         return roads;
     }
     
@@ -72,7 +72,7 @@ public class RoadNetwork {
      * @throws IllegalArgumentException unless endpoints of road are between {@code 0}
      *         and {@code V-1}
      */
-    public void addRoad(Lane r) {
+    public void addRoad(Road r) {
         int v = r.from();
         int w = r.to();
         validateVertex(v);
@@ -80,23 +80,6 @@ public class RoadNetwork {
         
         roads[v].add(r);
         indegree[w]++;
-        R++;  
-    }
-    
-    /**
-     * Adds a road {@code r} to this road network.
-     *
-     * @param  from vertex from
-     * @param to vertex to
-     * @param length road length
-     * @throws IllegalArgumentException unless endpoints of road are between {@code 0}
-     *         and {@code V-1}
-     */
-    public void addRoad(int from, int to, double length) {
-        validateVertex(from);
-        validateVertex(to);
-        roads[from].add(new Lane(from, to, length));
-        indegree[to]++;
         R++;
     }
     
@@ -107,7 +90,7 @@ public class RoadNetwork {
      * @return the directed edges incident from vertex {@code v} as an Iterable
      * @throws IllegalArgumentException unless {@code 0 <= v < V}
      */
-    public ArrayList<Lane> roadsFrom(int from) {
+    public ArrayList<Road> roadsFrom(int from) {
         validateVertex(from);
         return roads[from];
     }
@@ -145,10 +128,10 @@ public class RoadNetwork {
      *
      * @return all edges in this edge-weighted digraph, as an iterable
      */
-    public Iterable<Lane> allRoads() {
-    	ArrayList<Lane> list = new ArrayList<Lane>();
+    public Iterable<Road> allRoads() {
+    	ArrayList<Road> list = new ArrayList<Road>();
         for (int v = 0; v < V; v++) {
-            for (Lane r : roadsFrom(v)) {
+            for (Road r : roadsFrom(v)) {
                 list.add(r);
             }
         }
@@ -166,7 +149,7 @@ public class RoadNetwork {
         s.append(V + " " + R + NEWLINE);
         for (int v = 0; v < V; v++) {
             s.append(v + ": ");
-            for (Lane r : roads[v]) {
+            for (Road r : roads[v]) {
                 s.append(r + "  ");
             }
             s.append(NEWLINE);
@@ -185,7 +168,7 @@ public class RoadNetwork {
     	toReturn = roadsList();
     	
     	for (int v = 0; v < V; v++) {
-            for (Lane r : roads[v]) {
+            for (Road r : roads[v]) {
             	toReturn += r.printRoad();
             	toReturn += "\n";
             }
