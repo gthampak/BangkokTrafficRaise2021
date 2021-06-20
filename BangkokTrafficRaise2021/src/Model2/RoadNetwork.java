@@ -188,34 +188,62 @@ public class RoadNetwork {
             for (Road r : roadsFrom(v)) { //for all roads starting from intersection
             	for(Lane l : r.lanes()) {
             		
-            		boolean removedCar = false;
-            		
-            		for(Car c : l.cars()) { //for all car slots on the road
-                    	
+            		for(int i = 0; i < l.cars().size(); i++) { //for all car slots on the road
+            			
+            			Car c = l.cars().get(i);
+            			
             			if(c.iterations() == iterations) { //avoid doing same car twice in one iteration
             				
             				double headPos = c.headPos() + c.speed();
                 			
-                			if(headPos > l.length() && l.trafficLight() == 'R') {
-                				headPos = l.length();
-                			} else if(headPos > l.length() && l.trafficLight() == 'G') {
+                			if(i == 0) { //first car
                 				
-                				//go to new road/lane
-                				double decideHelp = 1.0/(l.toLanes().size());
-                		   		int toLane = (int) (Math.random() / decideHelp);
+                				if(headPos > l.length() && l.trafficLight() == 'R') {
+                    				headPos = l.length();
+                    			} else if(headPos > l.length() && l.trafficLight() == 'G') {
+                    				
+                    				//go to new road/lane
+                    				double decideHelp = 1.0/(l.toLanes().size());
+                    		   		int toLane = (int) (Math.random() / decideHelp);
+                    				
+                    		   		headPos = c.speed() - (l.length() - c.headPos());
+                    		   		
+                    		   		if(l.toLanes().get(toLane).insertCar(c)) {
+                    		   			i--;
+                    		   		} else {
+                    		   			headPos = l.length();
+                    		   		}
+                    		   		
+                    			} else {
+                    				//headPos = c.headPos() + c.speed();
+                    			}
                 				
-                		   		headPos = c.speed() - (l.length() - c.headPos());
-                		   		
-                		   		if(l.toLanes().get(toLane).insertCar(c)) {
-                		   			removedCar = true;
-                		   		} else {
-                		   			headPos = l.length();
-                		   		}
-                		   		
-                			} else {
-                				//headPos = c.headPos() + c.speed();
+                			} else { //not first car in lane
+                				
+                				Car inFront = l.cars().get(i-1);
+                				
+                				if(headPos > inFront.tailPos()) {
+                					headPos = inFront.tailPos() - 1; // leave 1 meter between cars
+                				} else if(headPos > l.length() && l.trafficLight() == 'G') {
+                    				
+                    				//go to new road/lane
+                    				double decideHelp = 1.0/(l.toLanes().size());
+                    		   		int toLane = (int) (Math.random() / decideHelp);
+                    				
+                    		   		headPos = c.speed() - (l.length() - c.headPos());
+                    		   		
+                    		   		if(l.toLanes().get(toLane).insertCar(c)) {
+                    		   			i--;
+                    		   		} else {
+                    		   			headPos = l.length();
+                    		   		}
+                    		   		
+                    			} else {
+                    				//headPos = c.headPos() + c.speed();
+                    			}
+                				
                 			}
-                			
+            				
                 			c.setHeadPos(headPos);
                 			c.setTailPos(c.headPos() - c.length());
                 			
@@ -227,11 +255,6 @@ public class RoadNetwork {
             			}
             			
             		}//for loop close
-            		
-            		if(removedCar) {
-            			l.cars().remove(0);
-            			removedCar = false;
-            		}
             		
                	} //for loop close
             } //for loop close

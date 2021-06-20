@@ -16,7 +16,6 @@ public class Car {
 	private double speed; //speed in meters per second/iteration
 	private double acceleration;
 	
-	
 	public Car() {
 		this.iterations = 0;
 		
