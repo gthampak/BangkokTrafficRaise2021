@@ -159,17 +159,17 @@ public class Lane {
         		
         		toReturn += "x";
         		
-        		for(int j = 0; j < interval - 1; j++) {
+        		for(int j = 0; j < interval; j++) {
         			toReturn += "-";
         		}
         		
     		} else {
     			double carDist = length - cars.get(i).tailPos();
-        		int interval = (int) carDist/10;
+        		int interval = (int) carDist/10 - 1;
         		
         		toReturn += "x";
         		
-        		for(int j = 0; j < interval - 1; j++) {
+        		for(int j = 0; j < interval; j++) {
         			toReturn += "-";
         		}
     		}
