@@ -208,8 +208,10 @@ public class RoadNetwork {
                     				
                     		   		headPos -= l.length();
                     		   		
-                    		   		//need to set headPos and tailPos of car before inserting
-                    		   		//or else car is inserted with wrong headPos and tailPos (problematic)
+                    		   		/*
+                    		   		 * need to set headPos and tailPos of car before inserting
+                    		   		 * or else car is inserted with wrong headPos and tailPos (problematic)
+                    		   		 */
                     		   		c.setHeadPos(headPos);
                         			c.setTailPos(c.headPos() - c.length());
                     		   		
