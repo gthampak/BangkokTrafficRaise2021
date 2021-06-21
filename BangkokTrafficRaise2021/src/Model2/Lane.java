@@ -134,6 +134,10 @@ public class Lane {
     	
     }
     
+    /**
+     * Returns String representation of Lane
+     * @return String representation of Lane
+     */
     public String printLane() {
     	String toReturn = from + "";
     	
@@ -178,6 +182,20 @@ public class Lane {
     	
     	
     	//add toLanes ArrayList
+    	
+    	return toReturn;
+    }
+    
+    /**
+     * Returns String representation of list of cars
+     * @return
+     */
+    public String printCars() {
+    	String toReturn = "";
+    	
+    	for(int i = 0; i < cars.size(); i++) {
+    		toReturn += cars.get(i);
+    	}
     	
     	return toReturn;
     }
