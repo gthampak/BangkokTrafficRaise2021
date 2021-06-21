@@ -151,10 +151,10 @@ public class Lane {
     		}
     	}
     	
-    	for(int i = 0; i < cars.size(); i++) {
+    	for(int i = cars.size() - 1; i >= 0; i--) {
     		
-    		if(i != cars.size()-1) {
-    			double carDist = cars.get(i+1).tailPos() - cars.get(i).tailPos();
+    		if(i != 0) {
+    			double carDist = cars.get(i-1).tailPos() - cars.get(i).tailPos();
         		int interval = (int) carDist/10 - 1;
         		
         		toReturn += "x";
