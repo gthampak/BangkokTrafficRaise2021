@@ -108,16 +108,16 @@ public class Lane {
     	
     	if(cars.isEmpty()){
     		insertIndex = 0;
-    	} else if(headPos < cars.get(0).tailPos()){
+    	} else if(tailPos > cars.get(0).headPos()){
     		insertIndex = 0;
-    	} else if(tailPos > cars.get(cars.size() - 1).headPos()) {
+    	} else if(headPos < cars.get(cars.size() - 1).tailPos()) {
     		insertIndex = cars.size();
     	} else {
     		
     		//find appropriate insertIndex of new car in ArrayList of cars
     		for(int i = 1; i < cars.size() && insertIndex == -1; i++) {
-    			if(tailPos > cars.get(i - 1).headPos() && headPos < cars.get(i).tailPos()) {
-    				insertIndex = i;
+    			if(tailPos > cars.get(i + 1).headPos() && headPos < cars.get(i).tailPos()) {
+    				insertIndex = i + 1;
     			}
     		}
     		
