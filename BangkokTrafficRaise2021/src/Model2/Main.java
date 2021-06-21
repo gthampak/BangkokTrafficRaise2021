@@ -38,8 +38,8 @@ public class Main {
 				pause();
 				System.out.println(RN);
 				
-				System.out.println(RN.roads()[0].get(0).lanes()[0].printCars());
-				System.out.println(RN.roads()[1].get(0).lanes()[0].printCars());
+//				System.out.println(RN.roads()[0].get(0).lanes()[0].printCars());
+//				System.out.println(RN.roads()[1].get(0).lanes()[0].printCars());
 			}
 			
 			System.out.println("How many times do you want to iterate the system? (Enter integer)");
@@ -83,7 +83,6 @@ public class Main {
 		RN.addRoad(r2);
 		
 		r1.lanes()[0].addToLanes(r2.lanes()[0]);
-		
 		r2.lanes()[0].addToLanes(r1.lanes()[0]);
 		
 		r1.lanes()[0].insertCar(new Car(10, 'S'));
@@ -98,12 +97,37 @@ public class Main {
 	}
 	
 	public void userTest3() {
+		RoadNetwork RN = new RoadNetwork(2);
 		
+		Road r1 = new Road(0, 1, 500, 2);
+		Road r2 = new Road(1, 0, 500, 2);
+		
+		RN.addRoad(r1);
+		RN.addRoad(r2);
+		
+		r1.lanes()[0].addToLanes(r2.lanes()[0]);
+		r2.lanes()[0].addToLanes(r1.lanes()[0]);
+		r1.lanes()[1].addToLanes(r2.lanes()[1]);
+		r2.lanes()[1].addToLanes(r1.lanes()[1]);
+		
+		for(int i = 0; i < 500; i+=50) {
+			r1.lanes()[0].insertCar(new Car(i));
+			r1.lanes()[1].insertCar(new Car(i));
+			
+			r2.lanes()[0].insertCar(new Car(i));
+			r2.lanes()[1].insertCar(new Car(i));
+		}
+		
+		r1.lanes()[0].setTrafficLight('G');
+		
+		System.out.println(r1.lanes()[0].printCars());
+		
+		userInteract1(RN);
 	}
 	
 	public static void main(String[] args) {
 		Main main = new Main();
-		main.userTest2();
+		main.userTest3();
 	}
 	
 }
