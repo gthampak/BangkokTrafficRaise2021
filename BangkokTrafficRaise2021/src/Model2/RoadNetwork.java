@@ -59,6 +59,23 @@ public class RoadNetwork {
         return roads;
     }
     
+    /**
+     * indegree[v] = indegree of vertex v
+     *
+     * @return returns array of number of roads going into vertices
+     */
+    public int[] indegree() {
+    	return indegree;
+    }
+    
+    /**
+     * returns number of iterations RoadNetwork has run
+     * @return iterations
+     */
+    public int iterations() {
+    	return iterations;
+    }
+    
     // throw an IllegalArgumentException unless {@code 0 <= v < V}
     private void validateVertex(int v) {
         if (v < 0 || v >= V)
