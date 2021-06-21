@@ -195,7 +195,6 @@ public class RoadNetwork {
             			if(c.iterations() == iterations) { //avoid doing same car twice in one iteration
             				
             				double headPos = c.headPos() + c.speed();
-            				double tailPos = c.tailPos() + c.speed();
                 			
                 			if(i == 0) { //first car
                 				
@@ -209,6 +208,8 @@ public class RoadNetwork {
                     				
                     		   		headPos -= l.length();
                     		   		
+                    		   		//need to set headPos and tailPos of car before inserting
+                    		   		//or else car is inserted with wrong headPos and tailPos (problematic)
                     		   		c.setHeadPos(headPos);
                         			c.setTailPos(c.headPos() - c.length());
                     		   		
