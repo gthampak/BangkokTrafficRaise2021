@@ -44,6 +44,20 @@ public class Car {
 		this.carCode = carCode;
 	}
 	
+	public Car(double tailPos, int iterations) {
+		this.iterations = iterations;
+		
+		this.tailPos = tailPos;
+		this.headPos = tailPos + testLength;
+		
+		this.speed = testSpeed; 
+		this.acceleration = testAcceleration;
+		
+		this.length = testLength;
+		
+		this.carCode = carCode;
+	}
+	
 	public Car(double tailPos, char carCode) {
 		this.iterations = 0;
 		
@@ -84,6 +98,10 @@ public class Car {
 	
 	public double speed() {
 		return speed;
+	}
+	
+	public double acceleration() {
+		return acceleration;
 	}
 	
 	public double length() {

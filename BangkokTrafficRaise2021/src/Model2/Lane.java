@@ -214,7 +214,7 @@ public class Lane {
      * @return a string representation of the directed edge
      */
     public String toString() {
-        return from + "->" + to + " " + String.format("%5.5f", length);
+        return "Lane " + laneNumber + " of road: " + from + "->" + to + " " + String.format("%5.5f", length);
     }
 
     /**

@@ -48,8 +48,26 @@ public class Road {
 		return to;
 	}
 	
+	public double length() {
+		return length;
+	}
+	
+	public int numLanes() {
+		return numLanes;
+	}
+	
 	public Lane[] lanes() {
 		return lanes;
+	}
+	
+	public int numCars() {
+		int numCars = 0;
+		
+		for(int i = 0; i < numLanes; i++) {
+			numCars += lanes[i].cars().size();
+		}
+		
+		return numCars;
 	}
 	
 	public String printRoad() {
