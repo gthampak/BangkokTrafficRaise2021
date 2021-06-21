@@ -193,8 +193,11 @@ public class Lane {
     public String printCars() {
     	String toReturn = "";
     	
+    	toReturn += "Cars list for lane " + laneNumber + " of Road from vertex " + from + " to vertex " + to + "\n";
+    	
     	for(int i = 0; i < cars.size(); i++) {
-    		toReturn += cars.get(i);
+    		toReturn += "Car at index " + i + "\n";
+    		toReturn += cars.get(i) + "\n";
     	}
     	
     	return toReturn;

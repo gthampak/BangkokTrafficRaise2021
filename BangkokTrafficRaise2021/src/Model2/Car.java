@@ -72,4 +72,15 @@ public class Car {
 		return length;
 	}
 	
+	public String toString() {
+		
+		String toReturn = "";
+		
+		toReturn += ("Car's headPos is " + headPos + "\n");
+		toReturn += ("Car's tailPos is " + tailPos + "\n");
+		
+		return toReturn;
+		
+	}
+	
 }
