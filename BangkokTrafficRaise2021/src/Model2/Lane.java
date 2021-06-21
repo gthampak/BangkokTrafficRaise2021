@@ -106,20 +106,26 @@ public class Lane {
     	
     	int insertIndex = -1;
     	
-    	if(cars.isEmpty()){
-    		insertIndex = 0;
-    	} else if(tailPos > cars.get(0).headPos()){
-    		insertIndex = 0;
-    	} else if(headPos < cars.get(cars.size() - 1).tailPos()) {
-    		insertIndex = cars.size();
+    	if(headPos < 0) {
+    		//insertIndex stays at -1;
     	} else {
     		
-    		//find appropriate insertIndex of new car in ArrayList of cars
-    		for(int i = 1; i < cars.size() && insertIndex == -1; i++) {
-    			if(tailPos > cars.get(i + 1).headPos() && headPos < cars.get(i).tailPos()) {
-    				insertIndex = i + 1;
-    			}
-    		}
+    		if(cars.isEmpty()){
+        		insertIndex = 0;
+        	} else if(tailPos > cars.get(0).headPos()){
+        		insertIndex = 0;
+        	} else if(headPos < cars.get(cars.size() - 1).tailPos()) {
+        		insertIndex = cars.size();
+        	} else {
+        		
+        		//find appropriate insertIndex of new car in ArrayList of cars
+        		for(int i = 1; i < cars.size() && insertIndex == -1; i++) {
+        			if(tailPos > cars.get(i + 1).headPos() && headPos < cars.get(i).tailPos()) {
+        				insertIndex = i + 1;
+        			}
+        		}
+        		
+        	}
     		
     	}
     	
@@ -196,7 +202,7 @@ public class Lane {
     	toReturn += "Cars list for lane " + laneNumber + " of Road from vertex " + from + " to vertex " + to + "\n";
     	
     	for(int i = 0; i < cars.size(); i++) {
-    		toReturn += "Car at index " + i + "\n";
+    		toReturn += "Car at index " + i + cars.get(i).carCode() + "\n";
     		toReturn += cars.get(i) + "\n";
     	}
     	
@@ -219,12 +225,12 @@ public class Lane {
     public static void main(String[] args) {
     	//simple Lane class test
     	
-    	Lane testLane = new Lane(0, 1, 100, 0);
-    	testLane.insertCar(new Car());
-    	testLane.insertCar(new Car(50.0));
-    	
-    	System.out.println(testLane.cars().size());
-    	
-    	System.out.println(testLane.printLane());
+//    	Lane testLane = new Lane(0, 1, 100, 0);
+//    	testLane.insertCar(new Car());
+//    	testLane.insertCar(new Car(50.0));
+//    	
+//    	System.out.println(testLane.cars().size());
+//    	
+//    	System.out.println(testLane.printLane());
     }
 }

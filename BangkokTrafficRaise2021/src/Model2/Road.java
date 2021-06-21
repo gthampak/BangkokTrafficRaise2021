@@ -83,14 +83,14 @@ public class Road {
 	public static void main(String[] args) {
 		//simple Road class test
 		
-		Road r = new Road(0, 1, 100, 4);
-		
-		for(Lane l : r.lanes) {
-			l.insertCar(new Car());
-			l.insertCar(new Car(Math.random()*100));
-		}
-		
-		System.out.println(r.printRoad());
+//		Road r = new Road(0, 1, 100, 4);
+//		
+//		for(Lane l : r.lanes) {
+//			l.insertCar(new Car());
+//			l.insertCar(new Car(Math.random()*100));
+//		}
+//		
+//		System.out.println(r.printRoad());
 		
 	}
 	

@@ -16,6 +16,8 @@ public class Car {
 	private double speed; //speed in meters per second/iteration
 	private double acceleration;
 	
+	private char carCode; //for testing purposes
+	
 	public Car() {
 		this.iterations = 0;
 		
@@ -38,6 +40,22 @@ public class Car {
 		this.acceleration = testAcceleration;
 		
 		this.length = testLength;
+		
+		this.carCode = carCode;
+	}
+	
+	public Car(double tailPos, char carCode) {
+		this.iterations = 0;
+		
+		this.tailPos = tailPos;
+		this.headPos = tailPos + testLength;
+		
+		this.speed = testSpeed; 
+		this.acceleration = testAcceleration;
+		
+		this.length = testLength;
+		
+		this.carCode = carCode;
 	}
 	
 	public int iterations() {
@@ -70,6 +88,10 @@ public class Car {
 	
 	public double length() {
 		return length;
+	}
+	
+	public char carCode() {
+		return carCode;
 	}
 	
 	public String toString() {

@@ -195,6 +195,7 @@ public class RoadNetwork {
             			if(c.iterations() == iterations) { //avoid doing same car twice in one iteration
             				
             				double headPos = c.headPos() + c.speed();
+            				double tailPos = c.tailPos() + c.speed();
                 			
                 			if(i == 0) { //first car
                 				
@@ -206,9 +207,13 @@ public class RoadNetwork {
                     				double decideHelp = 1.0/(l.toLanes().size());
                     		   		int toLane = (int) (Math.random() / decideHelp);
                     				
-                    		   		headPos = c.speed() - (l.length() - c.headPos());
+                    		   		headPos -= l.length();
+                    		   		
+                    		   		c.setHeadPos(headPos);
+                        			c.setTailPos(c.headPos() - c.length());
                     		   		
                     		   		if(l.toLanes().get(toLane).insertCar(c)) {
+                    		   			l.cars().remove(i);
                     		   			i--;
                     		   		} else {
                     		   			headPos = l.length();
@@ -249,9 +254,6 @@ public class RoadNetwork {
                 			
                 			c.iterate();
                 			
-                			System.out.println("car headPos is " + c.headPos());
-                			System.out.println("car tailPos is " + c.tailPos());
-                			
             			}
             			
             		}//for loop close
@@ -273,30 +275,30 @@ public class RoadNetwork {
 
     	//simple RoadNetwork class test
     	
-    	RoadNetwork RN = new RoadNetwork(3);
-    	
-    	Road r = new Road(0, 1, 100, 4);
-    	
-    	Road r1 = new Road(0, 1, 500, 4);
-    	Road r2 = new Road(1, 2, 300, 2);
-    	
-    	for(Lane l : r1.lanes()) {
-			l.insertCar(new Car());
-			l.insertCar(new Car(Math.random()*500));
-			l.insertCar(new Car(Math.random()*500));
-			l.insertCar(new Car(Math.random()*500));
-		}
-    	
-    	for(Lane l : r2.lanes()) {
-			l.insertCar(new Car());
-			l.insertCar(new Car(Math.random()*300));
-			l.insertCar(new Car(Math.random()*300));
-		}
-    	
-    	RN.addRoad(r1);
-    	RN.addRoad(r2);
-    	
-    	System.out.println(RN);
+//    	RoadNetwork RN = new RoadNetwork(3);
+//    	
+//    	Road r = new Road(0, 1, 100, 4);
+//    	
+//    	Road r1 = new Road(0, 1, 500, 4);
+//    	Road r2 = new Road(1, 2, 300, 2);
+//    	
+//    	for(Lane l : r1.lanes()) {
+//			l.insertCar(new Car());
+//			l.insertCar(new Car(Math.random()*500));
+//			l.insertCar(new Car(Math.random()*500));
+//			l.insertCar(new Car(Math.random()*500));
+//		}
+//    	
+//    	for(Lane l : r2.lanes()) {
+//			l.insertCar(new Car());
+//			l.insertCar(new Car(Math.random()*300));
+//			l.insertCar(new Car(Math.random()*300));
+//		}
+//    	
+//    	RN.addRoad(r1);
+//    	RN.addRoad(r2);
+//    	
+//    	System.out.println(RN);
     	
     }
     
