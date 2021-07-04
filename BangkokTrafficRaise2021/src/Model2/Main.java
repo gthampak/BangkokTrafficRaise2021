@@ -524,7 +524,7 @@ public class Main {
 		userInteract2(RN);
 	}
 	
-	public void caseStudy1() {
+	public RoadNetwork caseStudy1() {
 		RoadNetwork RN = new RoadNetwork(16);
 		
 		//road start at 0
@@ -688,12 +688,12 @@ public class Main {
 		fifteen5.lanes()[2].addToLanes(five3.lanes()[2]);
 		fifteen5.lanes()[3].addToLanes(five13.lanes()[3]);
 		
-		System.out.println(RN);
+		return RN;
 	}
 	
 	public static void main(String[] args) {
 		Main main = new Main();
-		main.caseStudy1();
+		System.out.println(main.caseStudy1());
 	}
 	
 }

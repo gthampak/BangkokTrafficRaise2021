@@ -16,6 +16,8 @@ public class Car {
 	private double speed; //speed in meters per second/iteration
 	private double acceleration;
 	
+	private int nextLane;
+	
 	private char carCode; //for testing purposes
 	
 	public Car() {
@@ -28,6 +30,8 @@ public class Car {
 		this.acceleration = testAcceleration;
 		
 		this.length = testLength;
+		
+		this.nextLane = -1;
 	}
 	
 	public Car(double tailPos) {
@@ -42,6 +46,8 @@ public class Car {
 		this.length = testLength;
 		
 		this.carCode = carCode;
+		
+		this.nextLane = -1;
 	}
 	
 	public Car(double tailPos, int iterations) {
@@ -108,9 +114,57 @@ public class Car {
 		return length;
 	}
 	
+	public int nextLane() {
+		return nextLane;
+	}
+	
+	public void setNextLane(int nextLane) {
+		this.nextLane = nextLane;
+	}
+	
 	public char carCode() {
 		return carCode;
 	}
+	
+	public void accelerate() {
+		speed++;
+	}
+	
+	public void decelerate() {
+		if(speed == 0) {
+			//do nothing
+		} else {
+			speed--;
+		}
+	}
+	
+//	public void updateSpeed(Car inFront) {
+//		
+//		boolean closeTraffic = true;
+//		
+//		if(inFront.speed() >= 10) {
+//			closeTraffic = false;
+//		}
+//		
+//		double oneSecDist = speed;
+//		double twoSecDist = 2*speed;
+//		
+//		double carDist = inFront.tailPos() - headPos;
+//		
+//		int decelTime = carDist
+//		
+//		if(carDist < oneSecDist) {
+//			decelerate();
+//		} 
+//
+//		if(closeTraffic) {
+//			if() {
+//				
+//			}
+//		}
+//		
+//		
+//	}
 	
 	public String toString() {
 		

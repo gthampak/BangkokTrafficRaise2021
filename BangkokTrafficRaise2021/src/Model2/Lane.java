@@ -101,6 +101,18 @@ public class Lane {
      */
     public boolean insertCar(Car car) {
     	
+    	//next lane assignment
+    	
+    	if(toLanes.size() != 0) {
+    		double decideHelp = 1.0/(toLanes().size());
+       		car.setNextLane((int) (Math.random() / decideHelp));
+    	} else {
+    		car.setNextLane(-1);
+    	}
+    	
+    	
+    	
+    	//insert car starts
     	double headPos = car.headPos();
     	double tailPos = car.tailPos();
     	
@@ -136,7 +148,6 @@ public class Lane {
     		System.out.println("Car not inserted in lane " + laneNumber + " of road from " + from + " to " + to);
     		return false;
     	}
-    	
     	
     }
     

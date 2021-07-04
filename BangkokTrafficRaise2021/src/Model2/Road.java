@@ -70,7 +70,7 @@ public class Road {
 		return numCars;
 	}
 	
-	public String printRoad() {
+public String printRoad() {
 		
 		String toReturn = "";
 		
@@ -90,6 +90,19 @@ public class Road {
 		}
 		
 		toReturn += roadEdge + "\n";
+		
+		return toReturn;
+	}
+	
+	public String printRoad1() {
+		
+		String toReturn = "";
+		
+//		toReturn += "This road goes from vertex " + from + " to vertex " + to + "\n";
+		
+		for(Lane l: lanes) {
+			toReturn += l.printLane() + "\n";
+		}
 		
 		return toReturn;
 	}

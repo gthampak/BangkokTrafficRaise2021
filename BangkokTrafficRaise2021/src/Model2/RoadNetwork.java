@@ -219,18 +219,22 @@ public class RoadNetwork {
                     				headPos = l.length();
                     			} else if(headPos > l.length() && l.trafficLight() == 'G') {
                     				
-                    				if(l.toLanes().size() == 0) { //if no coded next lanes (edge roads)
+                    				if(c.nextLane() == -1) { //if no coded next lanes (edge roads)
                     					l.cars().remove(i);
                     				} else { //go to new road/lane
+                    					
+                    					//original next lane assignment
+                    					/*
+                    					 * 
                     					double decideHelp = 1.0/(l.toLanes().size());
                         		   		int toLane = (int) (Math.random() / decideHelp);
                         				
                         		   		headPos -= l.length();
                         		   		
-                        		   		/*
-                        		   		 * need to set headPos and tailPos of car before inserting
-                        		   		 * or else car is inserted with wrong headPos and tailPos (problematic)
-                        		   		 */
+                        		   		
+                        		   		//need to set headPos and tailPos of car before inserting
+                        		   		//or else car is inserted with wrong headPos and tailPos (problematic)
+                        		   		 
                         		   		c.setHeadPos(headPos);
                             			c.setTailPos(c.headPos() - c.length());
                         		   		
@@ -240,6 +244,24 @@ public class RoadNetwork {
                         		   		} else {
                         		   			headPos = l.length();
                         		   		}
+                        		   		
+                    					 */
+
+                    					headPos -= l.length();
+                        		   		
+                        		   		//need to set headPos and tailPos of car before inserting
+                        		   		//or else car is inserted with wrong headPos and tailPos (problematic)
+                        		   		 
+                        		   		c.setHeadPos(headPos);
+                            			c.setTailPos(c.headPos() - c.length());
+                        		   		
+                        		   		if(l.toLanes().get(c.nextLane()).insertCar(c)) {
+                        		   			l.cars().remove(i);
+                        		   			i--;
+                        		   		} else {
+                        		   			headPos = l.length();
+                        		   		}
+                        		   		
                     				}
                     				
                     		   		
