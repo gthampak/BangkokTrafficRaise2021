@@ -691,9 +691,62 @@ public class Main {
 		return RN;
 	}
 	
+	public void userInteractSpeedTest(RoadNetwork RN) {
+		
+		System.out.println(RN);
+		
+		System.out.println("How many times do you want to iterate the system? (Enter integer)");
+		String input = sc.nextLine();
+		
+		while(!input.equals("exit")) {
+			int numIterate = Integer.valueOf(input);
+			
+			for(int i = 0; i < numIterate; i++) {
+				RN.iterateWSpeed();
+				pause();
+				System.out.println(RN);
+				
+//				System.out.println(RN.roads()[0].get(0).lanes()[0].printCars());
+//				System.out.println(RN.roads()[1].get(0).lanes()[0].printCars());
+			}
+			
+			System.out.println("How many times do you want to iterate the system? (Enter integer)");
+			input = sc.nextLine();
+			
+		} //end while loop
+	}
+	
+	public void speedTest1() { //passed //one car interact with red light
+		RoadNetwork RN = new RoadNetwork(2);
+    	
+    	Road r = new Road(0, 1, 431, 1);
+    	
+    	RN.addRoad(r);
+    	
+    	r.lanes()[0].insertCar(new Car());
+    	
+    	userInteractSpeedTest(RN);
+	}
+	
+	public void speedTest2() { //passed //two cars interact with red light
+		RoadNetwork RN = new RoadNetwork(2);
+    	
+    	Road r = new Road(0, 1, 200, 1);
+    	
+    	RN.addRoad(r);
+    	
+    	r.lanes()[0].insertCar(new Car(30));
+    	r.lanes()[0].insertCar(new Car());
+    	
+    	userInteractSpeedTest(RN);
+	}
+	
 	public static void main(String[] args) {
+//		Main main = new Main();
+//		System.out.println(main.caseStudy1());
+		
 		Main main = new Main();
-		System.out.println(main.caseStudy1());
+		main.speedTest2();
 	}
 	
 }

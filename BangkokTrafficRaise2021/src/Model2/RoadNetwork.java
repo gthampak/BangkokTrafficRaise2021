@@ -312,6 +312,62 @@ public class RoadNetwork {
     	
     }
     
+    public void iterateWSpeed() {
+    	
+    	for (int v = 0; v < V; v++) { //for all intersections
+            for (Road r : roadsFrom(v)) { //for all roads starting from intersection
+            	for(Lane l : r.lanes()) {
+            		
+            		for(int i = 0; i < l.cars().size(); i++) { //for all car slots on the road
+            			
+            			Car c = l.cars().get(i);
+            			
+            			if(c.iterations() == iterations) { //avoid doing same car twice in one iteration
+                			
+                			if(i == 0) { //first car
+                				
+                				if(l.trafficLight() == 'R') {
+                    				
+                					c.updateSpeedRed(l.length());
+                					
+                    			} else if(l.trafficLight() == 'G') {
+                    				
+                    				ArrayList<Car> cars = l.toLanes().get(c.nextLane()).cars();
+                    				Car inFront = cars.get(cars.size()-1);
+                    				
+                    				c.updateSpeed(inFront);
+                    				
+                    			}
+
+                				
+                			} else { //not first car in lane
+                				Car inFront = l.cars().get(i - 1);
+                				
+                				c.updateSpeed(inFront);
+                				
+                			}
+                			
+                			c.setHeadPos(c.headPos() + c.speed());
+                			c.setTailPos(c.headPos() - c.length());
+                			
+                			System.out.println("speed " + c.speed());
+            				System.out.println("hp " + c.headPos());
+            				System.out.println("tp " + c.tailPos());
+                			
+                			c.iterate();
+                			
+            			}
+            			
+            		}//for loop close
+            		
+               	} //for loop close
+            } //for loop close
+        } //for loop close
+    	
+    	iterations++;
+    	
+    }
+    
     /**
      * Unit tests the {@code RoadNetwork} data type.
      *
