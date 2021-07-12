@@ -48,7 +48,7 @@ public class Main {
 			int numIterate = Integer.valueOf(input);
 			
 			for(int i = 0; i < numIterate; i++) {
-				RN.iterate();
+				//RN.iterate();
 				pause();
 				System.out.println(RN);
 				
@@ -104,7 +104,7 @@ public class Main {
 				skipLine();
 				
 				for(int i = 0; i < numIterate; i++) {
-					RN.iterate();
+					//RN.iterate();
 					pause();
 					System.out.println(RN);
 				}
@@ -688,6 +688,8 @@ public class Main {
 		fifteen5.lanes()[2].addToLanes(five3.lanes()[2]);
 		fifteen5.lanes()[3].addToLanes(five13.lanes()[3]);
 		
+		RN.assignRoadToLanes();
+		
 		return RN;
 	}
 	
@@ -731,12 +733,13 @@ public class Main {
 	public void speedTest2() { //passed //two cars interact with red light
 		RoadNetwork RN = new RoadNetwork(2);
     	
-    	Road r = new Road(0, 1, 200, 1);
+    	Road r = new Road(0, 1, 500, 1);
     	
     	RN.addRoad(r);
     	
-    	r.lanes()[0].insertCar(new Car(30));
+    	r.lanes()[0].insertCar(new Car(150.0));
     	r.lanes()[0].insertCar(new Car());
+    	//r.lanes()[0].setTrafficLight('G');
     	
     	userInteractSpeedTest(RN);
 	}
@@ -747,6 +750,7 @@ public class Main {
 		
 		Main main = new Main();
 		main.speedTest2();
+		
 	}
 	
 }

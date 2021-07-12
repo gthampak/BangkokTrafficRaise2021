@@ -1,5 +1,7 @@
 package Model2;
 
+import java.util.ArrayList;
+
 public class Car {
 
 	//test variables
@@ -15,6 +17,10 @@ public class Car {
 	
 	private double speed; //speed in meters per second/iteration
 	private double acceleration;
+	private boolean decelerated = false;
+	
+	private ArrayList<Road> path;
+	private int laneChange;
 	
 	private int nextLane;
 	
@@ -46,6 +52,8 @@ public class Car {
 		this.length = testLength;
 		
 		this.nextLane = -1;
+		
+		this.laneChange = 0;
 	}
 	
 	public Car(double tailPos) {
@@ -62,6 +70,8 @@ public class Car {
 		this.carCode = carCode;
 		
 		this.nextLane = -1;
+		
+		this.laneChange = 0;
 	}
 	
 	public Car(double tailPos, int iterations) {
@@ -76,6 +86,10 @@ public class Car {
 		this.length = testLength;
 		
 		this.carCode = carCode;
+		
+		this.nextLane = -1;
+		
+		this.laneChange = 0;
 	}
 	
 	public Car(double tailPos, char carCode) {
@@ -90,6 +104,10 @@ public class Car {
 		this.length = testLength;
 		
 		this.carCode = carCode;
+		
+		this.nextLane = -1;
+		
+		this.laneChange = 0;
 	}
 	
 	public int iterations() {
@@ -124,12 +142,20 @@ public class Car {
 		return acceleration;
 	}
 	
+	public boolean decelerated() {
+		return decelerated;
+	}
+	
 	public double length() {
 		return length;
 	}
 	
 	public int nextLane() {
 		return nextLane;
+	}
+	
+	public int laneChange() {
+		return laneChange;
 	}
 	
 	public void setNextLane(int nextLane) {
@@ -140,8 +166,10 @@ public class Car {
 		return carCode;
 	}
 	
-	public void accelerate() {
-		speed++;
+	public void accelerate(Lane l) {
+		if(speed != l.speedLimit()) {
+			speed++;
+		}
 	}
 	
 	public void decelerate() {
@@ -150,11 +178,116 @@ public class Car {
 		} else {
 			speed--;
 		}
+		
+		decelerated = true;
+	}
+	
+	public void decelerate2() {
+		if(speed == 1) {
+			speed--;
+		} else if(speed == 0){
+			
+		} else {
+			speed -= 2;
+		}
+		
+		decelerated = true;
+	}
+	
+	/**
+	 * checks whether car ahead is one second ahead
+	 * 
+	 * @param ahead
+	 * @return
+	 */
+	public boolean oneSecBehind(Car ahead) {
+		
+		if(ahead.tailPos() - headPos > ahead.speed()) {
+			return true;
+		} else {
+			return false;
+		}
+		
+	}
+	
+	public boolean oneSecAhead(Car behind) {
+		
+		if(tailPos - behind.headPos > speed) {
+			return true;
+		} else {
+			return false;
+		}
+		
+	}
+	
+	public boolean speedPlusMinusTwo(Car c){
+		if(Math.abs(speed - c.speed()) <= 2) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	public int distGain(Car inFront) {
 		
-		double distBetween= inFront.tailPos() - headPos - speed;
+		int speedDiff = (int) (speed - inFront.speed());
+		int distGain;
+		
+		if(speedDiff%2 == 0) {
+			distGain = (speedDiff + 1) * (speedDiff/2);
+		} else {
+			distGain = (speedDiff + 1) * (speedDiff/2) + (speedDiff/2 + 1);
+		}
+		
+		if(speedDiff > 0) {
+			return distGain;
+		} else {
+			return 0;
+		}
+		
+	}
+	
+	
+	//*** when to decelerate. to consider speed, speeddiff, time to speed0
+	public void updateSpeed(Car inFront, Lane l) {
+		
+		double distBetween = inFront.tailPos() - headPos - inFront.speed();
+		
+		if(inFront.speed() == 0) {
+			updateSpeedRed(inFront.tailPos() - 1, l);
+		} else if(inFront.decelerated() && speed - 3 > inFront.speed()) {
+			decelerate();
+		} else {
+			if(distBetween > 2*inFront.speed() + distGain(inFront) + 2) {
+				if(inFront.decelerated()) {
+					//do nothing
+				} else {
+					accelerate(l);
+				}
+				
+				decelerated = false;
+				
+			} else if(distBetween > inFront.speed() + distGain(inFront)) {
+				
+				if(speed - inFront.speed() >= 2) {
+					decelerate();
+				} 
+				
+				//else, do nothing
+				decelerated = false;
+				
+			} else {
+				decelerate2();
+			}
+			
+		}
+		
+		
+	}
+	
+	public int DistGainLaneChange(Car inFront) {
+		
+		double distBetween = inFront.tailPos() - headPos;
 		int db = (int) distBetween;
 		
 		int speedDiff = (int) (speed - inFront.speed());
@@ -167,69 +300,73 @@ public class Car {
 		}
 		
 		return distGain;
+	}
+	
+	public void updateSpeed2(Car inFront, Lane l) {
+		
+		double marker = inFront.tailPos() - 2*inFront.speed();
+				
+		updateSpeedRed(marker - 2, l);
+		
+//		if(inFront.speed() == 0) {
+//			updateSpeedRed(inFront.tailPos() - 1);
+//		} else {
+//			
+//			double distBetween = inFront.tailPos() - headPos - inFront.speed();
+//			int db = (int) (distBetween/speed);
+//			
+//			double speedDiff = speed - inFront.speed();
+//			
+//			if(db < 2) {
+//				decelerate();
+//				
+//				System.out.println("1 happened");
+//				
+//			} else if(db == 2) {
+//				
+//				if(speedDiff < 0) {
+//					accelerate();
+//					
+//					System.out.println("2 happened");
+//					
+//				} else if(speedDiff == 0) {
+//					//do nothing
+//					
+//					System.out.println("3 happened");
+//					
+//				} else if(speedDiff > 0) {
+//					decelerate();
+//					System.out.println("4 happened");
+//				}
+//				
+//			} else if(db > 2) {
+//				
+//				if(speedDiff <= 0) {
+//					accelerate();
+//					System.out.println("accelerated");
+//				} else {
+//					if(distBetween > (2*inFront.speed() + distGain(inFront) + 2*(speed + 1))) {
+//						accelerate();
+//						System.out.println("5 happened");
+//					} else if(distBetween > (2*inFront.speed() + distGain(inFront) + speed + 1)) {
+//						//do nothing
+//						System.out.println("6 happened");
+//					} else if(distBetween > (2*inFront.speed() + distGain(inFront))) {
+//						decelerate();
+//						System.out.println("7 happened");
+//					} else {
+//						decelerate();
+//						System.out.println("8 happened");
+//					}
+//				}
+//				
+//			} // end if-else 2
+//			
+//		} // end if-else 1
 		
 	}
 	
-	public void updateSpeed(Car inFront) {
-		
-		if(inFront.speed() == 0) {
-			updateSpeedRed(inFront.tailPos() - 1);
-		} else {
-			
-			double distBetween = inFront.tailPos() - headPos - inFront.speed();
-			int db = (int) (distBetween/speed);
-			
-			double speedDiff = speed - inFront.speed();
-			
-			if(db < 2) {
-				decelerate();
-				
-				System.out.println("1 happened");
-				
-			} else if(db == 2) {
-				
-				if(speedDiff < 0) {
-					accelerate();
-					
-					System.out.println("2 happened");
-					
-				} else if(speedDiff == 0) {
-					//do nothing
-					
-					System.out.println("3 happened");
-					
-				} else if(speedDiff > 0) {
-					decelerate();
-					System.out.println("4 happened");
-				}
-				
-			} else if(db > 2) {
-				
-				if(speedDiff <= 0) {
-					
-				} else {
-					if(distBetween > (2*inFront.speed() + distGain(inFront) + 2*(speed + 1))) {
-						accelerate();
-						System.out.println("5 happened");
-					} else if(distBetween > (2*inFront.speed() + distGain(inFront) + speed + 1)) {
-						//do nothing
-						System.out.println("6 happened");
-					} else if(distBetween > (2*inFront.speed() + distGain(inFront))) {
-						decelerate();
-						System.out.println("7 happened");
-					} else {
-						decelerate();
-						System.out.println("8 happened");
-					}
-				}
-				
-			} // end if-else 2
-			
-		} // end if-else 1
-		
-	}
-	
-	public void updateSpeedRed(double roadLength) {
+	public void updateSpeedRed(double roadLength, Lane l) {
 		
 		double distBetween = roadLength - headPos;
 		
@@ -242,9 +379,11 @@ public class Car {
 		}
 		
 		if(distBetween > decelDist + speed + 1) {
-			accelerate();
+				accelerate(l);
+				decelerated = false;
 		} else if(distBetween >= decelDist) {
 			//do nothing
+			decelerated = false;
 		} else if(distBetween < decelDist) {
 			decelerate();
 		}
@@ -264,12 +403,6 @@ public class Car {
 	
 	
 	public static void main(String[] args) {
-		Car c1 = new Car();
-		Car c2 = new Car();
-		c2.accelerate();
-		c2.accelerate();
-		c2.accelerate();
-		c2.accelerate();
-		c2.accelerate();
+		
 	}
 }

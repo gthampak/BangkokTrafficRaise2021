@@ -156,6 +156,30 @@ public class RoadNetwork {
     } 
     
     /**
+     * called after constructing RoadNetwork to tell lanes the roads they belong to
+     * also populates toRoads ArrayList
+     */
+    public void assignRoadToLanes() {
+    	
+    	for(Road r : allRoads()) {
+    		for(int i = 0; i < r.lanes().length; i++) {
+    			r.lanes()[i].setRoad(r);
+    		} //end for loop
+    		
+    		for(int i = 0; i < r.lanes().length; i++) {
+    			
+    			for(Lane l : r.lanes()[i].toLanes()) {
+    				r.lanes()[i].addToRoads(l.road());
+    				
+    			}//end for loop
+    			
+    		} //end for loop
+    		
+    	} //end for loop
+    	
+    }
+    
+    /**
      * Prints out list of roads of this Road Network.
      *
      * @return the number of vertices <em>V</em>, followed by the number of road <em>R</em>,
@@ -195,11 +219,11 @@ public class RoadNetwork {
     }
     
     
-    /* Random number from 0 to outdegree
-	 * 	double decideHelp = 1.0/(outdegree(r.to()));
-   		int toRoad = (int) (Math.random() / decideHelp);
+    /* out-dated iterate method
 	 */
-    public void iterate() {
+    /*
+     *
+     * public void iterate() {
     	
     	for (int v = 0; v < V; v++) { //for all intersections
             for (Road r : roadsFrom(v)) { //for all roads starting from intersection
@@ -223,30 +247,30 @@ public class RoadNetwork {
                     					l.cars().remove(i);
                     				} else { //go to new road/lane
                     					
-                    					//original next lane assignment
-                    					/*
-                    					 * 
-                    					double decideHelp = 1.0/(l.toLanes().size());
-                        		   		int toLane = (int) (Math.random() / decideHelp);
-                        				
-                        		   		headPos -= l.length();
-                        		   		
-                        		   		
-                        		   		//need to set headPos and tailPos of car before inserting
-                        		   		//or else car is inserted with wrong headPos and tailPos (problematic)
-                        		   		 
-                        		   		c.setHeadPos(headPos);
-                            			c.setTailPos(c.headPos() - c.length());
-                        		   		
-                        		   		if(l.toLanes().get(toLane).insertCar(c)) {
-                        		   			l.cars().remove(i);
-                        		   			i--;
-                        		   		} else {
-                        		   			headPos = l.length();
-                        		   		}
-                        		   		
-                    					 */
-
+//                    					//*** original next lane assignment start
+//                    					 
+//                    					double decideHelp = 1.0/(l.toLanes().size());
+//                        		   		int toLane = (int) (Math.random() / decideHelp);
+//                        				
+//                        		   		headPos -= l.length();
+//                        		   		
+//                        		   		
+//                        		   		//need to set headPos and tailPos of car before inserting
+//                        		   		//or else car is inserted with wrong headPos and tailPos (problematic)
+//                        		   		 
+//                        		   		c.setHeadPos(headPos);
+//                            			c.setTailPos(c.headPos() - c.length());
+//                        		   		
+//                        		   		if(l.toLanes().get(toLane).insertCar(c)) {
+//                        		   			l.cars().remove(i);
+//                        		   			i--;
+//                        		   		} else {
+//                        		   			headPos = l.length();
+//                        		   		}
+//
+//                    					//*** original next lane assignment end
+                    					
+                    					
                     					headPos -= l.length();
                         		   		
                         		   		//need to set headPos and tailPos of car before inserting
@@ -311,6 +335,9 @@ public class RoadNetwork {
     	iterations++;
     	
     }
+     * 
+     */
+
     
     public void iterateWSpeed() {
     	
@@ -324,29 +351,63 @@ public class RoadNetwork {
             			
             			if(c.iterations() == iterations) { //avoid doing same car twice in one iteration
                 			
-                			if(i == 0) { //first car
+                			if(c.laneChange() != 0) {
                 				
-                				if(l.trafficLight() == 'R') {
-                    				
-                					c.updateSpeedRed(l.length());
+                				if(c.laneChange() < 0) { //move first then lane change
                 					
-                    			} else if(l.trafficLight() == 'G') {
+                					
+                					
+                				}
+                				
+                				
+                				
+                			} else { // no lane change required
+                				//********* start original
+                				if(i == 0) { //first car
                     				
-                    				ArrayList<Car> cars = l.toLanes().get(c.nextLane()).cars();
-                    				Car inFront = cars.get(cars.size()-1);
+                    				if(l.trafficLight() == 'R') {
+                        				
+                    					c.updateSpeedRed(l.length(), l);
+                    					
+                        			} else if(l.trafficLight() == 'G') {
+                        				
+                        				if(c.nextLane() == -1) { //no next lane
+                        					
+                        					if(c.speed() < l.speedLimit()) {
+                        						c.accelerate(l);
+                        					}
+                        					
+                        					if(c.headPos() > r.length()) {
+                        						l.cars().remove(0);
+                        					}
+                        					
+                        				} else {
+                        					ArrayList<Car> cars = l.toLanes().get(c.nextLane()).cars();
+                            				
+                            				if(!cars.isEmpty()) {
+                            					Car inFront = cars.get(cars.size()-1);
+                                				c.updateSpeed(inFront, l);
+                            				} else {
+                            					c.accelerate(l); //temporary
+                            				}
+                        				}
+                        				
+                        			}
+
                     				
-                    				c.updateSpeed(inFront);
+                    			} else { //not first car in lane
+                    				Car inFront = l.cars().get(i - 1);
+                    				
+                    				c.updateSpeed(inFront, l);
                     				
                     			}
-
+                    			
+                				//********* end original
                 				
-                			} else { //not first car in lane
-                				Car inFront = l.cars().get(i - 1);
-                				
-                				c.updateSpeed(inFront);
-                				
-                			}
-                			
+                			} //end lane change else (no lane change)
+            				
+            				
+            				
                 			c.setHeadPos(c.headPos() + c.speed());
                 			c.setTailPos(c.headPos() - c.length());
                 			
@@ -355,8 +416,9 @@ public class RoadNetwork {
             				System.out.println("tp " + c.tailPos());
                 			
                 			c.iterate();
+
                 			
-            			}
+            			} //end iterations if
             			
             		}//for loop close
             		
