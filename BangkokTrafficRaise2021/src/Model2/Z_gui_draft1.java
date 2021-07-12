@@ -54,8 +54,6 @@ public class Z_gui_draft1 {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
-		ArrayList<ArrayList<JComponent>> components = new ArrayList<>();
-		
 		ArrayList<JTextArea> tas = new ArrayList<>();
 		ArrayList<JComboBox> cbs = new ArrayList<>();
 		ArrayList<JScrollPane> sps = new ArrayList<>();
@@ -115,9 +113,9 @@ public class Z_gui_draft1 {
 			frame.getContentPane().add(sp);
 		}
 		
-		JButton btnNewButton = new JButton();
-		btnNewButton.setText("");
-		btnNewButton.addMouseListener(new MouseAdapter() {
+		JButton updateButton = new JButton();
+		updateButton.setText("");
+		updateButton.addMouseListener(new MouseAdapter() {
 			public void mouseReleased(MouseEvent e) {
 				
 				for(int i = 0; i < tas.size(); i++) {
@@ -131,14 +129,12 @@ public class Z_gui_draft1 {
 						ta.setText(r.printRoad1());
 					}
 					
-					frame.getContentPane().add(cb);
-					frame.getContentPane().add(sp);
 				}
 				
 			}
 		});
-		btnNewButton.setBounds(210*6, 0, 20, 20);
-		frame.getContentPane().add(btnNewButton);
+		updateButton.setBounds(210*6, 0, 20, 20);
+		frame.getContentPane().add(updateButton);
 		
 		textField = new JTextField();
 		textField.setBounds(210*6, 40, 20, 20);
@@ -152,30 +148,17 @@ public class Z_gui_draft1 {
 			counter++;
 		}
 		
-		JButton btnNewButton_1 = new JButton("");
-		btnNewButton_1.setBounds(210*6, 60, 20, 20);
-		btnNewButton_1.addMouseListener(new MouseAdapter() {
+		JButton iterateButton = new JButton("");
+		iterateButton.setBounds(210*6, 60, 20, 20);
+		iterateButton.addMouseListener(new MouseAdapter() {
 			public void mouseReleased(MouseEvent e) {
 				
 				for(int j = 0; j < Integer.parseInt(textField.getText()); j++) {
 					
-					pause();
 					RN.iterateWSpeed();
 					
-					for(int i = 0; i < tas.size(); i++) {
-						
-						JComboBox cb = cbs.get(i);
-						JTextArea ta = tas.get(i);
-						JScrollPane sp = sps.get(i);
-						
-						if(cb.getSelectedItem() != null) {
-							Road r = (Road) cb.getSelectedItem();
-							ta.setText(r.printRoad1());
-						}
-						
-						frame.getContentPane().add(cb);
-						frame.getContentPane().add(sp);
-					}
+					updateDisplay(cbs, tas);
+					pause();
 					
 					newCars(RN);
 					
@@ -183,7 +166,7 @@ public class Z_gui_draft1 {
 				
 			}
 		});
-		frame.getContentPane().add(btnNewButton_1);
+		frame.getContentPane().add(iterateButton);
 	}
 	
 	/**
@@ -206,6 +189,22 @@ public class Z_gui_draft1 {
 				
 			}
 		}
+	}
+	
+	public void updateDisplay(ArrayList<JComboBox> cbs, ArrayList<JTextArea> tas){
+		
+		for(int i = 0; i < tas.size(); i++) {
+			
+			JComboBox cb = cbs.get(i);
+			JTextArea ta = tas.get(i);
+			
+			if(cb.getSelectedItem() != null) {
+				Road r = (Road) cb.getSelectedItem();
+				ta.setText(r.printRoad1());
+			}
+			
+		}
+		
 	}
 	
 }
