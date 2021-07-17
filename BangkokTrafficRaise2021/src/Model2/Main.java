@@ -737,11 +737,15 @@ public class Main {
     	
     	RN.addRoad(r);
     	
-    	r.lanes()[0].insertCar(new Car(150.0));
+    	r.lanes()[0].insertCar(new Car(30.0));
     	r.lanes()[0].insertCar(new Car());
     	//r.lanes()[0].setTrafficLight('G');
     	
     	userInteractSpeedTest(RN);
+	}
+	
+	public void laneChangeTest() {
+		
 	}
 	
 	public static void main(String[] args) {

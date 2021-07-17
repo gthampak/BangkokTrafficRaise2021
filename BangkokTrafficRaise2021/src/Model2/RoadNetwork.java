@@ -343,7 +343,9 @@ public class RoadNetwork {
     	
     	for (int v = 0; v < V; v++) { //for all intersections
             for (Road r : roadsFrom(v)) { //for all roads starting from intersection
-            	for(Lane l : r.lanes()) {
+            	for(int j = 0; j < r.lanes().length; j++) {
+            		
+            		Lane l = r.lanes()[j];
             		
             		for(int i = 0; i < l.cars().size(); i++) { //for all car slots on the road
             			
@@ -353,14 +355,56 @@ public class RoadNetwork {
                 			
                 			if(c.laneChange() != 0) {
                 				
-                				if(c.laneChange() < 0) { //move first then lane change
+                				if(i == 0) {
                 					
+                					if(l.trafficLight() == 'R') {
+                    					
+                    					if(c.laneChange() < 0) { //left lane change
+                    						
+                    						c.updateSpeedRed(l.length(), l);
+
+                    						if(r.lanes()[j-1].insertLaneChange(c)) {
+                    							
+                    							l.cars().remove(i);
+                    							i--;
+                    							
+                    						} else { //what happens to speed of car after failed lane change?
+                    							
+                    						}
+                    						
+                    					} else { //c.laneChange > 0, right lane change
+                    						
+                    						if(r.lanes()[j-1].insertLaneChange(c)) {
+                    							
+                    							l.cars().remove(i);
+                    							i--;
+                    							
+                    						} else { //what happens to speed of car after failed lane change?
+                    							
+                    						}
+                    					
+                    					}
+                    					
+                    				} else if(l.trafficLight() == 'G') {
+                    					
+                    					if(c.laneChange() > 0) {
+                    						
+                    						if(r.lanes()[j+1].insertLaneChange(c)) {
+                    							
+                    						}
+                    						
+                    					} else {
+                    						
+                    						
+                    						
+                    					}
+                    					
+                    				}
                 					
-                					
-                				}
+                				} //end i == 0 if
                 				
-                				
-                				
+                			
+                			//end laneChange != 0 if statement
                 			} else { // no lane change required
                 				//********* start original
                 				if(i == 0) { //first car
@@ -396,6 +440,7 @@ public class RoadNetwork {
 
                     				
                     			} else { //not first car in lane
+                    				
                     				Car inFront = l.cars().get(i - 1);
                     				
                     				c.updateSpeed(inFront, l);
@@ -406,10 +451,21 @@ public class RoadNetwork {
                 				
                 			} //end lane change else (no lane change)
             				
+            				double headPos = c.headPos() + c.speed();
             				
+            				if(headPos <= l.length()) {
+            					c.setHeadPos(headPos);
+                    			c.setTailPos(headPos - c.length());
+            				} else {
+            					c.setHeadPos(headPos - l.length());
+            					c.setTailPos(c.headPos() - c.length());
+            					
+            					l.toLanes().get(c.nextLane()).insertCar(c);
+            					l.cars().remove(i);
+            		   			i--;
+            				}
             				
-                			c.setHeadPos(c.headPos() + c.speed());
-                			c.setTailPos(c.headPos() - c.length());
+                			
                 			
                 			System.out.println("speed " + c.speed());
             				System.out.println("hp " + c.headPos());

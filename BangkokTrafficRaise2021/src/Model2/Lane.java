@@ -182,92 +182,88 @@ public class Lane {
     	
     }
     
-    
-    
-    
-    public boolean insertLaneChange(Car c) {
+   public boolean insertLaneChange(Car c) {
     	
-    	double headPos = c.headPos();
-    	double tailPos = c.tailPos();
+	   double headPos = c.headPos();
+	   double tailPos = c.tailPos();
     	
-    	int insertIndex = -1;
+	   int insertIndex = -1;
     	
-    	if(headPos < 0) {
-    		//insertIndex stays at -1;
-    	} else {
+	   if(headPos < 0) {
+		   //insertIndex stays at -1;
+		   System.out.println("Lane change to " + laneNumber + " of road from " + from + " to " + to + " failed.");
+		   return false;
+		   
+	   } else {
     		
-    		if(cars.isEmpty()){
-        		insertIndex = 0;
+		   if(cars.isEmpty()){
+			   insertIndex = 0;
+        	
+			   cars.add(insertIndex, c);
+			   return true;
+        	
+		   } else if(tailPos > cars.get(0).headPos()){
+			   insertIndex = 0;
         		
-        		cars.add(insertIndex, c);
-        		return true;
+			   Car behind = cars.get(0);
+			   double distBetween = c.tailPos() - behind.headPos();
+			   double maxDecel2Dist = behind.maxDecel2Dist(c);
+			   
+			   if(distBetween > maxDecel2Dist) {
+				   cars.add(insertIndex, c);
+				   return true;
+			   } else { //need change
+				   
+				   c.decelerate2();
+				   
+				   System.out.println("Lane change to " + laneNumber + " of road from " + from + " to " + to + " failed.");
+				   return false;
+			   }
         		
-        	} else if(tailPos > cars.get(0).headPos()){
-        		insertIndex = 0;
+		   } else if(headPos < cars.get(cars.size() - 1).tailPos()) {
+			   insertIndex = cars.size();
         		
-        		boolean laneChange;
-        		
-        		ArrayList<Car> cars = toLanes().get(c.nextLane()).cars();
-				if(!cars.isEmpty()) {
-					Car front = cars.get(cars.size() - 1);
-					
-					//laneChange = c.DistGainLaneChange(front) > 
-					
-				}
-        		
-        		Car behind = cars.get(0);
-        		
-        		cars.add(insertIndex, c);
-        		return true;
-        		
-        	} else if(headPos < cars.get(cars.size() - 1).tailPos()) {
-        		insertIndex = cars.size();
-        		
-        		Car front = cars.get(cars.size() - 1);
-        		
-        		if(c.speed() < front.speed()) {
-        			
-        			cars.add(insertIndex, c);
-            		return true;
-        			
-        		} else { //not done
-        			
-        		}
+			   Car front = cars.get(cars.size() - 1);
+			   double distBetween = front.tailPos() - c.headPos();
+			   
+			   if(distBetween > c.maxDecel2Dist(front)) {
+				   cars.add(insertIndex, c);
+				   return true;
+			   } else { //need change
+				   System.out.println("Lane change to " + laneNumber + " of road from " + from + " to " + to + " failed.");
+				   return false;
+			   }
 
-        	} else {
+		   } else {
         		
-        		//find appropriate insertIndex of new car in ArrayList of cars
-        		for(int i = 1; i < cars.size() && insertIndex == -1; i++) {
-        			if(tailPos > cars.get(i + 1).headPos() && headPos < cars.get(i).tailPos()) {
-        				insertIndex = i + 1;
-        			}
-        			
-        		}
+			   //find appropriate insertIndex of new car in ArrayList of cars
+			   for(int i = 1; i < cars.size() && insertIndex == -1; i++) {
+				   
+				   if(tailPos > cars.get(i + 1).headPos() && headPos < cars.get(i).tailPos()) {
+					   insertIndex = i + 1;
+				   }
+				   
+			   } //end for loop
         		
-        	}
+			   Car front = cars.get(insertIndex - 1);
+			   Car behind = cars.get(insertIndex);
+			   
+			   double distBetween1 = front.tailPos() - c.headPos();
+			   double distBetween2 = c.tailPos() - behind.headPos();
+			   
+			   if(distBetween1 > c.maxDecel2Dist(front) && distBetween2 > behind.maxDecel2Dist(c)) {
+				   cars.add(insertIndex, c);
+				   return true;
+			   } else { //need change
+				   System.out.println("Lane change to " + laneNumber + " of road from " + from + " to " + to + " failed.");
+				   return false;
+			   }
+			   
+		   } //end else
     		
-    	}
-    	
-    	Car front = cars.get(insertIndex - 1);
-    	Car back = cars.get(insertIndex);
-    	
-    	double speedDiffFront = c.speed() - front.speed();
-    	double speedDiffBack = c.speed() - back.speed();
-    	
-    	if(insertIndex != -1 && c.oneSecAhead(back) && c.oneSecBehind(front)) {
-    		
-    		if(c.speedPlusMinusTwo(front)) {
-    			
-    		}
-    		
-    		cars.add(insertIndex, c);
-    		return true;
-    	} else {
-    		System.out.println("Lane change to " + laneNumber + " of road from " + from + " to " + to + " failed.");
-    		return false;
-    	}
-    	
-    }
+	   }
+    	 	
+   } //end method
     
     
     /**
