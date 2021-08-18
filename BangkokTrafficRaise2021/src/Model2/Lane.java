@@ -182,7 +182,7 @@ public class Lane {
     	
     }
     
-   public boolean insertLaneChange(Car c) {
+   public boolean insertLaneChange(Car c, boolean isFirst) {
     	
 	   double headPos = c.headPos();
 	   double tailPos = c.tailPos();
@@ -200,19 +200,23 @@ public class Lane {
 			   insertIndex = 0;
         	
 			   cars.add(insertIndex, c);
+			   c.laneChanged();
 			   return true;
         	
-		   } else if(tailPos > cars.get(0).headPos()){
+		   } else if(tailPos > cars.get(0).headPos()){ //ahead of first car in lane
 			   insertIndex = 0;
         		
 			   Car behind = cars.get(0);
 			   double distBetween = c.tailPos() - behind.headPos();
-			   double maxDecel2Dist = behind.maxDecel2Dist(c);
+			   double maxDecel3Dist = behind.maxDecel3Dist(c);
 			   
-			   if(distBetween > maxDecel2Dist) {
+			   if(distBetween > maxDecel3Dist) {
 				   cars.add(insertIndex, c);
+				   c.laneChanged();
 				   return true;
 			   } else { //need change
+				   
+				   //state: car trying to laneChange is in front, slower, distance closing fast
 				   
 				   c.decelerate2();
 				   
@@ -226,8 +230,9 @@ public class Lane {
 			   Car front = cars.get(cars.size() - 1);
 			   double distBetween = front.tailPos() - c.headPos();
 			   
-			   if(distBetween > c.maxDecel2Dist(front)) {
+			   if(distBetween > c.maxDecel3Dist(front)) {
 				   cars.add(insertIndex, c);
+				   c.laneChanged();
 				   return true;
 			   } else { //need change
 				   System.out.println("Lane change to " + laneNumber + " of road from " + from + " to " + to + " failed.");
@@ -239,8 +244,8 @@ public class Lane {
 			   //find appropriate insertIndex of new car in ArrayList of cars
 			   for(int i = 1; i < cars.size() && insertIndex == -1; i++) {
 				   
-				   if(tailPos > cars.get(i + 1).headPos() && headPos < cars.get(i).tailPos()) {
-					   insertIndex = i + 1;
+				   if(tailPos > cars.get(i).headPos()) {
+					   insertIndex = i;
 				   }
 				   
 			   } //end for loop
@@ -251,8 +256,9 @@ public class Lane {
 			   double distBetween1 = front.tailPos() - c.headPos();
 			   double distBetween2 = c.tailPos() - behind.headPos();
 			   
-			   if(distBetween1 > c.maxDecel2Dist(front) && distBetween2 > behind.maxDecel2Dist(c)) {
+			   if(distBetween1 > c.maxDecel3Dist(front) && distBetween2 > behind.maxDecel3Dist(c)) {
 				   cars.add(insertIndex, c);
+				   c.laneChanged();
 				   return true;
 			   } else { //need change
 				   System.out.println("Lane change to " + laneNumber + " of road from " + from + " to " + to + " failed.");

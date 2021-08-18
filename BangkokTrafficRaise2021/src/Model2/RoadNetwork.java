@@ -363,23 +363,27 @@ public class RoadNetwork {
                     						
                     						c.updateSpeedRed(l.length(), l);
 
-                    						if(r.lanes()[j-1].insertLaneChange(c)) {
+                    						if(r.lanes()[j-1].insertLaneChange(c, true)) {
                     							
                     							l.cars().remove(i);
                     							i--;
                     							
                     						} else { //what happens to speed of car after failed lane change?
+                    							
+                    							
                     							
                     						}
                     						
                     					} else { //c.laneChange > 0, right lane change
                     						
-                    						if(r.lanes()[j-1].insertLaneChange(c)) {
+                    						if(r.lanes()[j+1].insertLaneChange(c, true)) {
                     							
                     							l.cars().remove(i);
                     							i--;
                     							
                     						} else { //what happens to speed of car after failed lane change?
+                    							
+                    							
                     							
                     						}
                     					
@@ -387,15 +391,36 @@ public class RoadNetwork {
                     					
                     				} else if(l.trafficLight() == 'G') {
                     					
-                    					if(c.laneChange() > 0) {
+                    					if(c.laneChange() < 0) {
                     						
-                    						if(r.lanes()[j+1].insertLaneChange(c)) {
+                    						ArrayList<Car> cars = l.toLanes().get(c.nextLane()).cars();
+                    						
+                    						if(cars.size() != 0) {
+                    							Car inFront = cars.get(cars.size() - 1);
+                    							c.updateSpeed(inFront, l);
+                    						} else {
+                    							c.updateSpeedRed(l.length() - c.headPos(), l.toLanes().get(c.nextLane()));;
+                    						}
+                    						
+                    						if(r.lanes()[j-1].insertLaneChange(c, true)) {
+                    							l.cars().remove(i);
+                    							i--;
+                    						} else { //what happens to speed of car after failed lane change?
+                    							
+                    							
                     							
                     						}
                     						
-                    					} else {
+                    					} else { //c.laneChange > 0, right lane change
                     						
-                    						
+                    						if(r.lanes()[j+1].insertLaneChange(c, true)) {
+                    							l.cars().remove(i);
+                    							i--;
+                    						} else { //what happens to speed of car after failed lane change?
+                    							
+                    							
+                    							
+                    						}
                     						
                     					}
                     					
@@ -405,6 +430,7 @@ public class RoadNetwork {
                 				
                 			
                 			//end laneChange != 0 if statement
+                			
                 			} else { // no lane change required
                 				//********* start original
                 				if(i == 0) { //first car
@@ -415,7 +441,7 @@ public class RoadNetwork {
                     					
                         			} else if(l.trafficLight() == 'G') {
                         				
-                        				if(c.nextLane() == -1) { //no next lane
+                        				if(c.nextLane() == -1) { //no next lane, remove car from network (approaching speed limit)
                         					
                         					if(c.speed() < l.speedLimit()) {
                         						c.accelerate(l);
@@ -426,13 +452,14 @@ public class RoadNetwork {
                         					}
                         					
                         				} else {
-                        					ArrayList<Car> cars = l.toLanes().get(c.nextLane()).cars();
+                        					Lane nextLane = l.toLanes().get(c.nextLane()); //lane that car c is heading to next
+                        					ArrayList<Car> cars = nextLane.cars(); //ArrayList of cars in nextLane
                             				
                             				if(!cars.isEmpty()) {
                             					Car inFront = cars.get(cars.size()-1);
                                 				c.updateSpeed(inFront, l);
                             				} else {
-                            					c.accelerate(l); //temporary
+                            					c.updateSpeedRed(nextLane.length(), nextLane); //works but could be better
                             				}
                         				}
                         				

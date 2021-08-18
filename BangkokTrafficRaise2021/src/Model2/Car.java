@@ -23,6 +23,7 @@ public class Car {
 	private int laneChange;
 	
 	private int nextLane;
+	private boolean incomingLC = false; //whether another car needs to/wants to signal lane change to position in front
 	
 	private char carCode; //for testing purposes
 	
@@ -158,6 +159,26 @@ public class Car {
 		return laneChange;
 	}
 	
+	public void setLaneChange(int lc) {
+		laneChange = lc;
+	}
+	
+	public void laneChanged() {
+		if(laneChange > 0) {
+			laneChange--;
+		} else if(laneChange < 0) {
+			laneChange++;
+		}
+	}
+	
+	public void setIncomingLC(boolean ilc) {
+		incomingLC = ilc;
+	}
+	
+	public boolean incomingLC() {
+		return incomingLC;
+	}
+	
 	public void setNextLane(int nextLane) {
 		this.nextLane = nextLane;
 	}
@@ -200,57 +221,18 @@ public class Car {
 		//decelerated = true;
 	}
 	
-	/**
-	 * checks whether car ahead is one second ahead
-	 * 
-	 * @param ahead
-	 * @return
-	 */
-	public boolean oneSecBehind(Car ahead) {
-		
-		if(ahead.tailPos() - headPos > ahead.speed()) {
-			return true;
+	public void decelerate3() {
+		if(speed == 1) {
+			speed--;
+		} else if(speed == 2) {
+			speed-=2;
+		} else if(speed == 0){
+			
 		} else {
-			return false;
+			speed -= 3;
 		}
 		
-	}
-	
-	public boolean oneSecAhead(Car behind) {
-		
-		if(tailPos - behind.headPos > speed) {
-			return true;
-		} else {
-			return false;
-		}
-		
-	}
-	
-	public boolean speedPlusMinusTwo(Car c){
-		if(Math.abs(speed - c.speed()) <= 2) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
-	public int distGain(Car inFront) {
-		
-		int speedDiff = (int) (speed - inFront.speed());
-		int distGain;
-		
-		if(speedDiff%2 == 0) {
-			distGain = (speedDiff + 1) * (speedDiff/2);
-		} else {
-			distGain = (speedDiff + 1) * (speedDiff/2) + (speedDiff/2 + 1);
-		}
-		
-		if(speedDiff > 0) {
-			return distGain;
-		} else {
-			return 0;
-		}
-		
+		//decelerated = true;
 	}
 	
 	//in use
@@ -276,7 +258,9 @@ public class Car {
 		return maxDecelDist;
 
 	}
+
 	
+	//in use
 	public double maxDecel2Dist(Car inFront) {
 		
 		double maxDecelDist = 0;
@@ -295,7 +279,42 @@ public class Car {
 	}
 	
 	//in use
+	public double maxDecel3Dist(Car inFront) {
+		
+		double maxDecelDist = 0;
+		double speedDiff = speed - inFront.speed();
+		
+		if(speedDiff > 0) {
+
+			for(double i = speed; i > 0; i -= 3) {
+				maxDecelDist += speedDiff;
+			}
+			
+		}
+		
+		return maxDecelDist + 1;
+		
+	}
+	
+	//in use
+	public boolean checkAccelerate2(double spd, Car inFront) {
+		
+		boolean toReturn = false;
+		
+		double distBetween = inFront.tailPos() - headPos;
+		double newDist = distBetween - spd;
+		
+		if(newDist > maxDecel3Dist(inFront)) {
+			toReturn = true;
+		}
+		
+		return toReturn;
+	}
+	
+	//in use
 	public void updateSpeed(Car inFront, Lane l) {
+		
+		//add update speed under car trying to lane change
 		
 		if(inFront.speed() == 0) {
 			updateSpeedRed(inFront.tailPos() - 1, l);
@@ -305,7 +324,8 @@ public class Car {
 			int db = (int) (distBetween/inFront.speed());
 			double maxDecelDist1 = maxDecelDist(speed+1, inFront);
 			double maxDecelDist2 = maxDecelDist(speed, inFront);
-			double maxDecelDist3 = maxDecel2Dist(speed, inFront);
+			double maxDecelDist3 = maxDecel2Dist(inFront);
+			double maxDecelDist4 = maxDecel3Dist(inFront);
 			
 			if(speed > inFront.speed()) {
 				if(distBetween > maxDecelDist1) {
@@ -314,8 +334,10 @@ public class Car {
 					//do nothing
 				} else if(distBetween > maxDecelDist3){
 					decelerate();
-				} else {
+				} else if(distBetween > maxDecelDist4) {
 					decelerate2();
+				} else {
+					decelerate3();
 				}
 			} else {
 				if(db > 2) {
@@ -335,9 +357,8 @@ public class Car {
 
 		
 	}
-	
-	//in use
-	public void updateSpeedRed(double roadLength, Lane l) {
+
+	public void updateSpeedRed2(double roadLength, Lane l) {
 		
 		double distBetween = roadLength - headPos;
 		
@@ -361,6 +382,46 @@ public class Car {
 		
 	}
 	
+	//in use for updateSpeedRed
+	public double decelDistToStop(double speed) {
+		
+		double decelDist;
+		
+		if(speed%4 == 0) {
+			decelDist = (speed+2)*(speed/4);
+		} else if( (speed+1)%4 == 0 ) {
+			decelDist = (speed+1)*((speed+1)/4);
+		} else if( (speed-1)%4 == 0 ) {
+			decelDist = (speed-1)*((speed-1)/4) + speed;
+		} else {
+			decelDist = speed*((speed+2)/4);
+		}
+		
+		return decelDist;
+		
+	}
+	
+	//in use
+	public void updateSpeedRed(double roadLength, Lane l) {
+		
+		double distBetween = roadLength - headPos;
+		
+		double decelDist = decelDistToStop(speed);
+		double decelDist2 = decelDistToStop(speed+1);
+		
+		if(distBetween == 1 && speed == 0) {
+			accelerate(l);
+		} else if(distBetween > decelDist2) {
+				accelerate(l);
+				//decelerated = false;
+		} else if(distBetween >= decelDist) {
+			//do nothing
+			//decelerated = false;
+		} else if(distBetween < decelDist) {
+			decelerate2();
+		} 
+		
+	}
 	
 	public void updateSpeed2(Car inFront, Lane l) {
 		
@@ -443,9 +504,12 @@ public class Car {
 	public static void main(String[] args) {
 		
 		Car c = new Car();
+		Car c2 = new Car();
+		c2.speed = 11;
 		
-		System.out.println( c.maxDecel2Dist(15 , c) );
-		System.out.println( c.maxDecelDist(15 , c) );
+		System.out.println(c2.maxDecel3Dist(c));
+		System.out.println(c2.maxDecel2Dist(c));
+		System.out.println(c2.maxDecelDist(c2.speed, c));
 		
 	}
 }

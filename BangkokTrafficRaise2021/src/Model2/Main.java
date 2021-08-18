@@ -721,7 +721,7 @@ public class Main {
 	public void speedTest1() { //passed //one car interact with red light
 		RoadNetwork RN = new RoadNetwork(2);
     	
-    	Road r = new Road(0, 1, 431, 1);
+    	Road r = new Road(0, 1, 63, 1);
     	
     	RN.addRoad(r);
     	
@@ -745,7 +745,17 @@ public class Main {
 	}
 	
 	public void laneChangeTest() {
+		RoadNetwork RN = new RoadNetwork(2);
 		
+		Road r = new Road(0, 1, 100, 2);
+		
+		RN.addRoad(r);
+		
+		Car c = new Car();
+		c.setLaneChange(1);
+		r.lanes()[0].insertCar(c);
+		
+		userInteractSpeedTest(RN);
 	}
 	
 	public static void main(String[] args) {
@@ -753,7 +763,7 @@ public class Main {
 //		System.out.println(main.caseStudy1());
 		
 		Main main = new Main();
-		main.speedTest2();
+		main.laneChangeTest();
 		
 	}
 	
