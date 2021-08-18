@@ -158,7 +158,7 @@ public class Car {
 	public int laneChange() {
 		return laneChange;
 	}
-	
+	//testing git
 	public void setLaneChange(int lc) {
 		laneChange = lc;
 	}
