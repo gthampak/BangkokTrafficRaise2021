@@ -61,7 +61,7 @@ public class Car {
 		this.iterations = 0;
 		
 		this.tailPos = tailPos;
-		this.headPos = tailPos + testLength;
+		this.headPos = tailPos + testLength; 
 		
 		this.speed = testSpeed; 
 		this.acceleration = testAcceleration;
