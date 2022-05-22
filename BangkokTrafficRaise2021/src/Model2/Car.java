@@ -245,6 +245,11 @@ public class Car {
 		laneChange = lc;
 	}
 	
+	/**
+	 * method to indicate a lane change
+	 * if moving towards greater lane number, update laneChange required 1 less than before (towards 0)
+	 * if moving towards lesser lane number, update lanChange required to 1 greater than before (towards 0)
+	 */
 	public void laneChanged() {
 		if(laneChange > 0) {
 			laneChange--;
@@ -253,34 +258,63 @@ public class Car {
 		}
 	}
 	
+	/**
+	 * mutator method for incomingLC variable
+	 * @param ilc
+	 */
 	public void setIncomingLC(boolean ilc) {
 		incomingLC = ilc;
 	}
 	
+	/**
+	 * accessor method for incomingLC variable
+	 * @return
+	 */
 	public boolean incomingLC() {
 		return incomingLC;
 	}
 	
+	/**
+	 * mutator method for nextLane variable
+	 * @param nextLane
+	 */
 	public void setNextLane(int nextLane) {
 		this.nextLane = nextLane;
 	}
 	
+	/**
+	 * accessor method for carCode variable
+	 * @return
+	 */
 	public char carCode() {
 		return carCode;
 	}
 	
+	/**
+	 * increase speed by 1 if the speed doesn't increase past speed limit
+	 * emulate pressing on accelerator
+	 * @param l
+	 */
 	public void accelerate(Lane l) {
 		if(speed != l.speedLimit()) {
 			speed++;
 		}
 	}
 	
+	/**
+	 * increase speed by 2 if the speed doesn't icnrease past speed limit
+	 * @param l
+	 */
 	public void accelerate2(Lane l) {
 		if(speed != l.speedLimit()) {
 			speed+=2;
 		}
 	}
 	
+	/**
+	 * decrease speed by 1 unless car is already stationary
+	 * emulate brakes
+	 */
 	public void decelerate() {
 		if(speed == 0) {
 			//do nothing
@@ -291,6 +325,9 @@ public class Car {
 		//decelerated = true;
 	}
 	
+	/**
+	 * decrease speed by 2 or until car is stationary.
+	 */
 	public void decelerate2() {
 		if(speed == 1) {
 			speed--;
@@ -303,6 +340,9 @@ public class Car {
 		//decelerated = true;
 	}
 	
+	/**
+	 * decrease speed by 3 or until car is stationary
+	 */
 	public void decelerate3() {
 		if(speed == 1) {
 			speed--;
@@ -317,7 +357,15 @@ public class Car {
 		//decelerated = true;
 	}
 	
-	//in use
+	/**
+	 * calculates the time taken in seconds for car to reach car in front.
+	 * 
+	 * @param inFront, the car considered in front of that car
+	 * car inFront could be car directly in front in the same lane,
+	 * car with blinkers on in another lane, or car on next road that current car is heading to next.
+	 * 
+	 * @return calculated time taken
+	 */
 	public int db(Car inFront) {
 		
 		double distBetween = inFront.tailPos() - headPos;
@@ -327,7 +375,14 @@ public class Car {
 		
 	}
 	
-	//in use
+	/**
+	 * calculates the maximum distance required to decelerate and not crash into car in front
+	 * while decelerating 1 speed at a time
+	 * 
+	 * @param spd
+	 * @param inFront
+	 * @return the distance
+	 */
 	public double maxDecelDist(double spd, Car inFront) {
 		
 		double maxDecelDist = 0;
@@ -342,7 +397,13 @@ public class Car {
 	}
 
 	
-	//in use
+	/**
+	 * calculates the maximum distance required to decelerate and not crash into car in front
+	 * while decelerating 2 speed at a time
+	 * 
+	 * @param inFront
+	 * @return
+	 */
 	public double maxDecel2Dist(Car inFront) {
 		
 		double maxDecelDist = 0;
