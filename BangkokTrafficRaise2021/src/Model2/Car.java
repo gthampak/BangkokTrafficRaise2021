@@ -17,10 +17,10 @@ public class Car {
 	
 	private double speed; //speed in meters per second/iteration
 	private double acceleration;
-	//private boolean decelerated = false;
+	private boolean decelerated = false; //boolean for whether car decelerated in the previous iteration (emulating brake lights)
 	
-	private ArrayList<Road> path;
-	private int laneChange;
+	private ArrayList<Road> path; //used to create path of cars
+	private int laneChange; //how many lanes car needs to change to be in correct lane
 	
 	private int nextLane;
 	private boolean incomingLC = false; //whether another car needs to/wants to signal lane change to position in front
@@ -29,7 +29,7 @@ public class Car {
 	
 
 	/**
-	 * default constructor
+	 * default constructor, car placed at the start of road at the start of simulation
 	 */
 	public Car() {
 		this.iterations = 0;
@@ -46,7 +46,8 @@ public class Car {
 	}
 	
 	/**
-	 * 
+	 * default constructor for adding cars in the middle of test simulations
+	 * cars only move if iteration values are the same as iteration number
 	 * 
 	 * @param iterations
 	 */
@@ -66,6 +67,11 @@ public class Car {
 		this.laneChange = 0;
 	}
 	
+	/**
+	 * constructor for adding cars at different positions on the road.
+	 * 
+	 * @param tailPos
+	 */
 	public Car(double tailPos) {
 		this.iterations = 0;
 		
@@ -84,6 +90,12 @@ public class Car {
 		this.laneChange = 0;
 	}
 	
+	/**
+	 * contructor for adding cars at different part of the road mid-sim (non-zero iteration)
+	 * 
+	 * @param tailPos
+	 * @param iterations
+	 */
 	public Car(double tailPos, int iterations) {
 		this.iterations = iterations;
 		
@@ -102,6 +114,13 @@ public class Car {
 		this.laneChange = 0;
 	}
 	
+	/**
+	 * constructor to add car code for better visualization of where specific cars are
+	 * (used to test that cars don't unrealistically overtake each other)
+	 * 
+	 * @param tailPos
+	 * @param carCode
+	 */
 	public Car(double tailPos, char carCode) {
 		this.iterations = 0;
 		
@@ -120,54 +139,108 @@ public class Car {
 		this.laneChange = 0;
 	}
 	
+	/**
+	 * accessor method for iterations variable
+	 * 
+	 * @return
+	 */
 	public int iterations() {
 		return iterations;
 	}
 	
+	/**
+	 * once a car moves, need to iterate so it doesn't move again for that iteration
+	 * (used for when cars lane-change and shouldn't move again when cars in different lane are iterated through)
+	 */
 	public void iterate() {
 		iterations++;
 	}
 	
+	/**
+	 * accessor method for headPos variable
+	 * @return
+	 */
 	public double headPos() {
 		return headPos;
 	}
 	
+	/**
+	 * mutator method for headPos variable
+	 * @param headPos
+	 */
 	public void setHeadPos(double headPos) {
 		this.headPos = headPos;
 	}
 	
+	/**
+	 * accessor method for tailPos variable
+	 * @return
+	 */
 	public double tailPos() {
 		return tailPos;
 	}
 	
+	/**
+	 * mutator method for tailPos variable
+	 * @param tailPos
+	 */
 	public void setTailPos(double tailPos) {
 		this.tailPos = tailPos;
 	}
 	
+	/**
+	 * accessor method for speed variable
+	 * @return
+	 */
 	public double speed() {
 		return speed;
 	}
 	
+	/**
+	 * accessor method for acceleration variable
+	 * @return
+	 */
 	public double acceleration() {
 		return acceleration;
 	}
+
+	/**
+	 * accessor method for decelerated variable
+	 * @return
+	 */
+	public boolean decelerated() {
+		return decelerated;
+	}
 	
-//	public boolean decelerated() {
-//		return decelerated;
-//	}
-	
+	/**
+	 * accessor method for length variable
+	 * @return
+	 */
 	public double length() {
 		return length;
 	}
 	
+	/**
+	 * accessor method for nextLane variable
+	 * @return
+	 */
 	public int nextLane() {
 		return nextLane;
 	}
 	
+	/**
+	 * accessor method for laneChange variable
+	 * @return
+	 */
 	public int laneChange() {
 		return laneChange;
 	}
-	//testing git
+
+	/**
+	 * mutator method for setLaneChange variable
+	 * 
+	 * @param lc
+	 */
 	public void setLaneChange(int lc) {
 		laneChange = lc;
 	}
