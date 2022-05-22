@@ -27,6 +27,10 @@ public class Car {
 	
 	private char carCode; //for testing purposes
 	
+
+	/**
+	 * default constructor
+	 */
 	public Car() {
 		this.iterations = 0;
 		
@@ -41,6 +45,11 @@ public class Car {
 		this.nextLane = -1;
 	}
 	
+	/**
+	 * 
+	 * 
+	 * @param iterations
+	 */
 	public Car(int iterations) {
 		this.iterations = iterations;
 		
