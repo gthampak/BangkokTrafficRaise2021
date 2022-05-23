@@ -358,13 +358,14 @@ public class Car {
 	}
 	
 	/**
-	 * calculates the time taken in seconds for car to reach car in front.
+	 * calculates the time taken in seconds for car to reach position of car in front.
+	 * Used as metric to ensure distance between 
 	 * 
 	 * @param inFront, the car considered in front of that car
 	 * car inFront could be car directly in front in the same lane,
 	 * car with blinkers on in another lane, or car on next road that current car is heading to next.
 	 * 
-	 * @return calculated time taken
+	 * @return calculated distance between car and car in front in seconds
 	 */
 	public int db(Car inFront) {
 		
@@ -421,7 +422,13 @@ public class Car {
 
 	}
 	
-	//in use
+	/**
+	 * calculates the maximum distance required to decelerate and not crash into car in front
+	 * while decelerating 3 speed at a time
+	 * 
+	 * @param inFront
+	 * @return the distance
+	 */
 	public double maxDecel3Dist(Car inFront) {
 		
 		double maxDecelDist = 0;
@@ -439,7 +446,13 @@ public class Car {
 		
 	}
 	
-	//in use
+	/**
+	 * check if the car can accelerate 2 and have enough time to decelerate before crashing to the car in front
+	 * 
+	 * @param spd
+	 * @param inFront
+	 * @return
+	 */
 	public boolean checkAccelerate2(double spd, Car inFront) {
 		
 		boolean toReturn = false;
@@ -454,7 +467,12 @@ public class Car {
 		return toReturn;
 	}
 	
-	//in use
+	/**
+	 * update the speed of the car appropriately in accordance to car in front
+	 * 
+	 * @param inFront
+	 * @param l
+	 */
 	public void updateSpeed(Car inFront, Lane l) {
 		
 		//add update speed under car trying to lane change
@@ -501,6 +519,12 @@ public class Car {
 		
 	}
 
+	/**
+	 * update speed of car given the car in front is stationary or car is approaching red light
+	 * 
+	 * @param roadLength
+	 * @param l
+	 */
 	public void updateSpeedRed2(double roadLength, Lane l) {
 		
 		double distBetween = roadLength - headPos;
@@ -525,7 +549,12 @@ public class Car {
 		
 	}
 	
-	//in use for updateSpeedRed
+	/**
+	 * calculate distance required to decelerate to stop before the red light
+	 * 
+	 * @param speed
+	 * @return
+	 */
 	public double decelDistToStop(double speed) {
 		
 		double decelDist;
@@ -544,7 +573,12 @@ public class Car {
 		
 	}
 	
-	//in use
+	/**
+	 * update speed of car given the car in front is stationary or car is approaching red light
+	 * 
+	 * @param roadLength
+	 * @param l
+	 */
 	public void updateSpeedRed(double roadLength, Lane l) {
 		
 		double distBetween = roadLength - headPos;
@@ -566,6 +600,12 @@ public class Car {
 		
 	}
 	
+	/**
+	 * update speed as if car in front is coming to a stop
+	 * 
+	 * @param inFront
+	 * @param l
+	 */
 	public void updateSpeed2(Car inFront, Lane l) {
 		
 		double marker = inFront.tailPos() - 2*inFront.speed();
@@ -630,8 +670,9 @@ public class Car {
 		
 	}
 	
-
-	
+	/**
+	 * print car as headPos and tailPos
+	 */
 	public String toString() {
 		
 		String toReturn = "";
@@ -642,7 +683,6 @@ public class Car {
 		return toReturn;
 		
 	}
-	
 	
 	public static void main(String[] args) {
 		
