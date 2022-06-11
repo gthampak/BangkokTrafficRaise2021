@@ -6,17 +6,17 @@ public class Lane {
 	
 	private static final double DEFAULT_SPEED_LIMIT = 20.0;
 	
-	private final int from;
-	private final int to;
-	private final double length; //length of lane in meters
+	private final int from; //which vertex is lane from
+	private final int to; //which vertex is lane going to
+	private final double length; // length of lane in meters
 	
-	private Road road;
-	private int laneNumber;
+	private Road road; // which road does this lane belong to
+	private int laneNumber; // which lane number it is on the road
 	
-	private ArrayList<Car> cars;
+	private ArrayList<Car> cars; // array of cars in that lane
 	
-	private double speedLimit;
-	private char trafficLight;
+	private double speedLimit; // speed limit of lane
+	private char trafficLight; // traffic light for that lane
 	private ArrayList<Lane> toLanes; //possible next lanes at intersection
 	private ArrayList<Road> toRoads;
 	
